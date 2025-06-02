@@ -7,7 +7,7 @@ import Sidebar from "./layouts/Sidebar";
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
   const [isOpen, setIsOpen] = useState(false);
-
+//comment
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed Header at Top */}
