@@ -5,7 +5,7 @@ import Header from "./layouts/Header";
 import Sidebar from "./layouts/Sidebar";
 
 function App() {
-   const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("dashboard");
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -13,6 +13,7 @@ function App() {
       {/* Fixed Header at Top */}
 
       <Header />
+
       <Sidebar />
       {/* Main content placeholder */}
       <main className="flex-1 px-4 py-6">
@@ -22,7 +23,6 @@ function App() {
       {/* Fixed Footer at Bottom */}
       <Footer />
     </div>
-
   );
 }
 
