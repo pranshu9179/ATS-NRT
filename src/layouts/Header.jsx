@@ -1,6 +1,3 @@
-
-
-
 import React, { useState } from "react";
 import { FiSearch, FiFilter, FiMenu, FiX } from "react-icons/fi";
 

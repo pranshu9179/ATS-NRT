@@ -1,29 +1,15 @@
-import { useState } from "react";
-import "./App.css";
-import Footer from "./layouts/Footer";
-import Header from "./layouts/Header";
-import Sidebar from "./layouts/Sidebar";
+// App.jsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./auth/Login";
+import { ROUTES } from "./utils";
+import DashboardHome from "./pages/dashboard/DashboardHome";
 
-function App() {
-  const [activePage, setActivePage] = useState("dashboard");
-  const [isOpen, setIsOpen] = useState(false);
-
+export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Fixed Header at Top */}
-
-      <Header />
-
-      <Sidebar />
-      {/* Main content placeholder */}
-      <main className="flex-1 px-4 py-6">
-        <h1 className="text-2xl font-bold text-center"></h1>
-      </main>
-
-      {/* Fixed Footer at Bottom */}
-      <Footer />
-    </div>
+    <Routes>
+      <Route exact path={ROUTES?.LOGIN} element={<Login />} />
+      <Route exact path={ROUTES?.DASHBOARD} element={<DashboardHome />} />
+    </Routes>
   );
 }
-
-export default App;
