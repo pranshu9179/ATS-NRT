@@ -1,6 +1,4 @@
-import { ROUTES } from "@/utils";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -15,24 +13,27 @@ import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoLockClosedOutline } from "react-icons/io5";
+import { LuUser } from "react-icons/lu";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-export default function Login() {
+export default function Register({ setIsLogin }) {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const [showCPassword, setShowCPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      cpassword: "",
     },
   });
 
   const onSubmit = (data) => {
     console.log("Form data:", data);
-    alert("Login successfully");
+    alert("Register successfully");
     form.reset();
-    navigate(ROUTES?.SIDEBAR);
+    setIsLogin(true);
   };
 
   return (
@@ -44,8 +45,33 @@ export default function Login() {
         >
           <div className="flex items-center justify-center gap-1">
             <User className=" text-cyan-400 text-3xl" />
-            <h2 className="text-xl font-medium ">Login Your Account</h2>
+            <h2 className="text-xl font-medium ">Create Your Account</h2>
           </div>
+
+          <FormField
+            control={form.control}
+            name="name"
+            rules={{ required: "Name is required" }}
+            render={({ field }) => (
+              <FormItem className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1">
+                    <LuUser />
+                    <FormLabel>Name</FormLabel>
+                  </div>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your name"
+                      {...field}
+                      className=""
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -63,7 +89,6 @@ export default function Login() {
                     <MdOutlineEmail className="text-gray-600" />
                     <FormLabel>Email</FormLabel>
                   </div>
-
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
@@ -117,6 +142,42 @@ export default function Login() {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="cpassword"
+            rules={{
+              required: "Confirm Password is required",
+              validate: (value) =>
+                value === form.watch("password") || "Passwords do not match",
+            }}
+            render={({ field }) => (
+              <FormItem className="space-y-4">
+                <div className="space-y-2">
+                  <div className=" flex gap-1 items-center">
+                    <IoLockClosedOutline />
+                    <FormLabel>Confirm Password</FormLabel>
+                  </div>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        type={showCPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <div
+                      className="absolute right-3 top-2.5 cursor-pointer text-gray-500"
+                      onClick={() => setShowCPassword(!showCPassword)}
+                    >
+                      {showCPassword ? <FiEyeOff /> : <FiEye />}
+                    </div>
+                  </div>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
           <Button
             className="w-full py-2 font-semibold text-sm bg-gradient-to-r
              from-blue-500 to-cyan-400 
@@ -124,7 +185,7 @@ export default function Login() {
           hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg  "
             type="submit"
           >
-            Login
+            Register
           </Button>
         </form>
       </Form>
