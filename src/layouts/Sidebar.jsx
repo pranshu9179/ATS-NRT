@@ -1,3 +1,4 @@
+import { ROUTES } from "@/utils";
 import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
@@ -7,8 +8,8 @@ const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
   const activePage = location.pathname;
 
   const navItems = [
-    { name: "Dashboard", path: "/dashboard", isAdmin: false },
-    { name: "Jobs", path: "/jobs", isAdmin: false },
+    { name: "Dashboard", path: ROUTES?.DASHBOARD, isAdmin: false },
+    { name: "Jobs", path: ROUTES?.LOGIN, isAdmin: false },
     { name: "Candidates", path: "/candidates", isAdmin: false },
   ];
 
@@ -41,7 +42,9 @@ const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
         </div>
 
         <div className="p-6">
-          <h2 className="text-2xl font-semibold text-indigo-700 mb-6">Navigation</h2>
+          <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
+            Navigation
+          </h2>
           <nav>
             <ul className="space-y-2">
               {navItems.map((item) => {
