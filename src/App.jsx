@@ -1,17 +1,35 @@
-// App.jsx
+// // App.jsx
+// import React from "react";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import AuthLayout from "./layouts/AuthLayout";
+// import { ROUTES } from "./utils";
+// import DashboardHome from "./pages/dashboard/DashboardHome";
+// import SidebarWrapper from "./layouts/Sidebar";
+
+
+// export default function App() {
+//   return (
+//     <Routes>
+//       <Route exact path={ROUTES?.AUTH} element={<AuthLayout />} />
+//       <Route exact path={ROUTES?.DASHBOARD} element={<DashboardHome />} />
+//       <Route exact path={ROUTES?.SIDEBAR} element={<SidebarWrapper/>} />
+//     </Routes>
+//   );
+// }
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./auth/Login";
+import AuthLayout from "./layouts/AuthLayout";
 import { ROUTES } from "./utils";
 import DashboardHome from "./pages/dashboard/DashboardHome";
-import Signup from "./auth/Signup";
+import SidebarWrapper from "./layouts/Sidebar";
 
 export default function App() {
   return (
-    <Routes>
-      <Route exact path={ROUTES?.LOGIN} element={<Login />} />
-      <Route exact path={ROUTES?.DASHBOARD} element={<DashboardHome />} />
-      <Route exact path={ROUTES?.SIGNUP} element={<Signup />} />
-    </Routes>
+      <Routes>
+        <Route path={ROUTES.AUTH + "/*"} element={<AuthLayout />} />
+        <Route path={ROUTES.DASHBOARD} element={<DashboardHome />} />
+        <Route path={ROUTES.SIDEBAR} element={<SidebarWrapper />} />
+      </Routes>
   );
 }

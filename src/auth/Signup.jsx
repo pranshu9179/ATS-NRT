@@ -1,9 +1,489 @@
+// import React, { useState } from "react";
+// import { useForm } from "react-hook-form";
+// import {
+//   Form,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormControl,
+//   FormMessage,
+// } from "@/components/ui/form";
+// import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import { User } from "lucide-react";
+// import { MdOutlineEmail } from "react-icons/md";
+// import { IoLockClosedOutline } from "react-icons/io5";
+// import { LuUser } from "react-icons/lu";
+// import { FiEye, FiEyeOff } from "react-icons/fi";
+// import { Dialog, DialogContent } from "@/components/ui/dialog";
+// import { Link, useLocation, useNavigate } from "react-router-dom";
+// import { useLayout } from "@/providers/LayoutProvider";
+// import { Checkbox } from "@/components/ui/checkbox";
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectValue,
+//   SelectContent,
+//   SelectItem,
+// } from "@/components/ui/select";
+// import { MdPhone } from "react-icons/md";
+
+// const roles = [
+//   { label: "HR", value: "HR" },
+//   { label: "Interviewer", value: "INTERVIEWER" },
+//   { label: "Admin", value: "ADMIN" },
+// ];
+
+//  const Signup=({ setIsLogin })=> {
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [showCPassword, setShowCPassword] = useState(false);
+//   const [emailOtp, setEmailOtp] = useState(Array(6).fill(""));
+//   const [open, setOpen] = useState(false);
+//   const [loading, setLoading] = useState(false);
+//   const { currentLayout } = useLayout();
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const isSuperAdmin = currentLayout?.name === "superadmin-layout";
+//   const from = location.state?.from?.pathname || "/";
+//   const [isOTPSent, setIsOTPSent] = useState(false);
+
+//   const form = useForm({
+//     defaultValues: {
+//       name: "",
+//       email: "",
+//       password: "",
+//       confirmPassword: "",
+//       organizationName: "",
+//       role: "HR",
+//       acceptTerms: false,
+//       phoneNo: "",
+//     },
+//   });
+
+//   const { handleSubmit } = form;
+
+//   const onSubmit = async (data) => {
+//     const {
+//       name,
+//       email,
+//       password,
+//       confirmPassword,
+//       organizationName,
+//       role,
+//       acceptTerms,
+//       phoneNo,
+//     } = data;
+
+//     console.log(
+//       name,
+//       email,
+//       password,
+//       confirmPassword,
+//       organizationName,
+//       role,
+//       acceptTerms,
+//       phoneNo
+//     );
+
+//     setLoading(true);
+
+//     try {
+//       if (isSuperAdmin) {
+//         const user = { name, email, org: organizationName, role };
+//         localStorage.setItem(`user_${email}`, JSON.stringify(user));
+//         alert("User created successfully");
+//         navigate(from, { replace: true });
+//         return;
+//       }
+
+//       if (!isOTPSent) {
+//         setIsOTPSent(true);
+//         setOpen(true);
+//         alert("OTP sent (simulated)");
+//         return;
+//       }
+
+//       const fullOtp = emailOtp.join("");
+//       if (fullOtp.length !== 6) return alert("OTP must be 6 digits");
+
+//       const user = {
+//         name,
+//         email,
+//         password,
+//         org: organizationName,
+//         otp: fullOtp,
+//         role: "CANDIDATE",
+//       };
+//       localStorage.setItem(`user_${email}`, JSON.stringify(user));
+//       alert("Registered successfully");
+//       setOpen(false);
+//       navigate(from, { replace: true });
+//     } catch (error) {
+//       console.error("Registration error:", error);
+//       alert("Something went wrong");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+//   const handleInputChange = (index, value) => {
+//     if (value.length > 1) return;
+//     const updated = [...emailOtp];
+//     updated[index] = value;
+//     setEmailOtp(updated);
+//     if (index < 5 && value) {
+//       document.getElementById(`otp-index-${index + 1}`)?.focus();
+//     }
+//   };
+
+//   return (
+//     <>
+//       {/* OTP Dialog */}
+//       <Dialog open={open} onOpenChange={setOpen}>
+//         <DialogContent className="w-full max-w-sm rounded-xl px-6 py-8 shadow-2xl">
+//           <h3 className="text-xl font-bold text-center mb-6 ">Enter OTP</h3>
+//           <div className="flex justify-center gap-3 mb-6">
+//             {emailOtp.map((value, index) => (
+//               <input
+//                 key={index}
+//                 id={`otp-index-${index}`}
+//                 type="text"
+//                 maxLength={1}
+//                 autoFocus={index === 0}
+//                 className="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg
+//                  font-semibold border border-gray-300 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+//                 value={value}
+//                 onChange={(e) => handleInputChange(index, e.target.value)}
+//                 onKeyDown={(e) => {
+//                   if (e.key === "Backspace" && !value && index > 0) {
+//                     document.getElementById(`otp-index-${index - 1}`)?.focus();
+//                   }
+//                 }}
+//               />
+//             ))}
+//           </div>
+//           <div className="flex justify-end">
+//             <button
+//               onClick={handleSubmit(onSubmit)}
+//               disabled={loading}
+//               className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md font-semibold shadow-md transition"
+//             >
+//               {loading ? "Verifying..." : "Verify & Register"}
+//             </button>
+//           </div>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* Register Form */}
+//       <div className="flex justify-center items-center  ">
+//         <Form {...form} className=" ">
+//           <form
+//             onSubmit={form.handleSubmit(onSubmit)}
+//             className="space-y-6 border dark:border-white/20 light:border-black/10 rounded-md p-10 w-96  "
+//           >
+//             <div className="flex items-center justify-center gap-1">
+//               <User className=" text-cyan-400 text-3xl" />
+//               <h2 className="text-xl font-medium ">Create Your Account</h2>
+//             </div>
+
+//             <FormField
+//               control={form.control}
+//               name="name"
+//               rules={{ required: "Name is required" }}
+//               render={({ field }) => (
+//                 <FormItem className="space-y-4">
+//                   <div className="space-y-2">
+//                     <div className="flex items-center gap-1">
+//                       <LuUser />
+//                       <FormLabel>Name</FormLabel>
+//                     </div>
+//                     <FormControl>
+//                       <Input
+//                         placeholder="Enter your name"
+//                         {...field}
+//                         className=""
+//                       />
+//                     </FormControl>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             <FormField
+//               control={form.control}
+//               name="email"
+//               rules={{
+//                 required: "Email is required",
+//                 pattern: {
+//                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+//                   message: "Please enter a valid email address",
+//                 },
+//               }}
+//               render={({ field }) => (
+//                 <FormItem className="space-y-4">
+//                   <div className="space-y-2">
+//                     <div className="flex items-center gap-1">
+//                       <MdOutlineEmail className="" />
+//                       <FormLabel>Email</FormLabel>
+//                     </div>
+//                     <FormControl>
+//                       <Input
+//                         placeholder="Enter your email"
+//                         {...field}
+//                         className=""
+//                       />
+//                     </FormControl>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             <FormField
+//               control={form.control}
+//               name="phoneNo"
+//               rules={{
+//                 required: "Phone number is required",
+//                 pattern: {
+//                   value: /^[0-9]{10}$/, 
+//                   message: "Phone number must be 10 digits",
+//                 },
+//               }}
+//               render={({ field }) => (
+//                 <FormItem className="space-y-4">
+//                   <div className="space-y-2">
+//                     <div className="flex items-center gap-1">
+//                       <MdPhone />
+//                       <FormLabel>Phone No.</FormLabel>
+//                     </div>
+//                     <FormControl>
+//                       <Input
+//                         placeholder="Enter your phone number"
+//                         {...field}
+//                         className=""
+//                       />
+//                     </FormControl>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             {/* Organization */}
+//             {isSuperAdmin && (
+//               <FormField
+//                 control={form.control}
+//                 name="organizationName"
+//                 rules={{ required: "organizationName is required" }}
+//                 render={({ field }) => (
+//                   <FormItem className="space-y-4">
+//                     <div className="space-y-2">
+//                       <div className="flex items-center gap-1">
+//                         <FormLabel>Oraganization Name</FormLabel>
+//                       </div>
+//                       <FormControl>
+//                         <Input
+//                           placeholder="Enter Organization name"
+//                           {...field}
+//                           className=""
+//                         />
+//                       </FormControl>
+//                       <FormMessage />
+//                     </div>
+//                   </FormItem>
+//                 )}
+//               />
+//             )}
+
+//             {isSuperAdmin && (
+//               <FormField
+//                 control={form.control}
+//                 name="role"
+//                 rules={{ required: "Role is required" }}
+//                 render={({ field }) => (
+//                   <FormItem className="space-y-4">
+//                     <div className="space-y-2">
+//                       <div className="flex items-center gap-1">
+//                         <LuUser />
+//                         <FormLabel>Role</FormLabel>
+//                       </div>
+//                       <FormControl>
+//                         <Select
+//                           value={field.value}
+//                           onValueChange={field.onChange}
+//                         >
+//                           <SelectTrigger>
+//                             <SelectValue placeholder="Select Role" />
+//                           </SelectTrigger>
+//                           <SelectContent>
+//                             {roles.map((role) => (
+//                               <SelectItem key={role.value} value={role.value}>
+//                                 {role.label}
+//                               </SelectItem>
+//                             ))}
+//                           </SelectContent>
+//                         </Select>
+//                       </FormControl>
+//                       <FormMessage />
+//                     </div>
+//                   </FormItem>
+//                 )}
+//               />
+//             )}
+
+//             <FormField
+//               control={form.control}
+//               name="password"
+//               rules={{
+//                 required: "Password is required",
+//                 // pattern: {
+//                 //   value:
+//                 //     /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
+//                 //   message:
+//                 //     "Password must be at least 8 characters, include upper/lowercase, number, and special character",
+//                 // },
+//               }}
+//               render={({ field }) => (
+//                 <FormItem className="space-y-4">
+//                   <div className="space-y-2">
+//                     <div className=" flex gap-1 items-center">
+//                       <IoLockClosedOutline />
+//                       <FormLabel>Password</FormLabel>
+//                     </div>
+//                     <div className="relative">
+//                       <FormControl>
+//                         <Input
+//                           type={showPassword ? "text" : "password"}
+//                           placeholder="Enter your password"
+//                           {...field}
+//                         />
+//                       </FormControl>
+//                       <div
+//                         className="absolute right-3 top-2.5 cursor-pointer text-gray-500"
+//                         onClick={() => setShowPassword(!showPassword)}
+//                       >
+//                         {showPassword ? <FiEyeOff /> : <FiEye />}
+//                       </div>
+//                     </div>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             <FormField
+//               control={form.control}
+//               name="confirmPassword"
+//               rules={{
+//                 required: "Confirm Password is required",
+//                 validate: (value) =>
+//                   value === form.watch("password") || "Passwords do not match",
+//               }}
+//               render={({ field }) => (
+//                 <FormItem className="space-y-4">
+//                   <div className="space-y-2">
+//                     <div className=" flex gap-1 items-center">
+//                       <IoLockClosedOutline />
+//                       <FormLabel>Confirm Password</FormLabel>
+//                     </div>
+//                     <div className="relative">
+//                       <FormControl>
+//                         <Input
+//                           type={showCPassword ? "text" : "password"}
+//                           placeholder="Enter your password"
+//                           {...field}
+//                         />
+//                       </FormControl>
+//                       <div
+//                         className="absolute right-3 top-2.5 cursor-pointer text-gray-500"
+//                         onClick={() => setShowCPassword(!showCPassword)}
+//                       >
+//                         {showCPassword ? <FiEyeOff /> : <FiEye />}
+//                       </div>
+//                     </div>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             <FormField
+//               control={form.control}
+//               name="acceptTerms"
+//               rules={{ required: "You must accept the terms and conditions" }}
+//               render={({ field }) => (
+//                 <FormItem className="flex items-start space-x-3 space-y-0">
+//                   <FormControl>
+//                     <Checkbox
+//                       checked={field.value}
+//                       onCheckedChange={field.onChange}
+//                       id="terms"
+//                     />
+//                   </FormControl>
+//                   <div className="space-y-1 leading-none">
+//                     <FormLabel
+//                       htmlFor="terms"
+//                       className="text-sm text-gray-600"
+//                     >
+//                       I accept the{" "}
+//                       <Link to="#" className="text-blue-600 underline">
+//                         Terms & Conditions
+//                       </Link>
+//                     </FormLabel>
+//                     <FormMessage />
+//                   </div>
+//                 </FormItem>
+//               )}
+//             />
+
+//             <Button
+//               className="w-full py-2 font-semibold text-sm bg-gradient-to-r
+//              from-blue-500 to-cyan-400 
+//           hover:scale-105 duration-700  transition-transform 
+//           hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg  "
+//               type="submit"
+//             >
+//               Register
+//             </Button>
+//           </form>
+//         </Form>
+//       </div>
+//     </>
+//   );
+// }
+// export default Signup
+
+
+// Signup.jsx
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
+import { MdOutlineEmail } from "react-icons/md";
+import { IoLockClosedOutline } from "react-icons/io5";
+import { LuUser } from "react-icons/lu";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useLayout } from "@/providers/LayoutProvider";
-import { Controller, useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { MdPhone } from "react-icons/md";
 
 const roles = [
   { label: "HR", value: "HR" },
@@ -12,27 +492,17 @@ const roles = [
 ];
 
 const Signup = () => {
-  const { currentLayout } = useLayout();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const isSuperAdmin = currentLayout?.name === "superadmin-layout";
-  const from = location.state?.from?.pathname || "/";
-
-  const [emailOtp, setEmailOtp] = useState(Array(6).fill(""));
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isOTPSent, setIsOTPSent] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
+  const [emailOtp, setEmailOtp] = useState(Array(6).fill(""));
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { currentLayout } = useLayout();
+  const navigate = useNavigate();
+  const isSuperAdmin = currentLayout?.name === "superadmin-layout";
+  const [isOTPSent, setIsOTPSent] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    register,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -41,28 +511,11 @@ const Signup = () => {
       organizationName: "",
       role: "HR",
       acceptTerms: false,
+      phoneNo: "",
     },
   });
 
-  const handleInputChange = (index, value) => {
-    if (value.length > 1) return;
-    const updated = [...emailOtp];
-    updated[index] = value;
-    setEmailOtp(updated);
-    if (index < 5 && value) {
-      document.getElementById(`otp-index-${index + 1}`)?.focus();
-    }
-  };
-
-  const validatePassword = (pw) => {
-    if (pw.length < 8) return "Password must be at least 8 characters";
-    if (!/[A-Z]/.test(pw)) return "Password must include an uppercase letter";
-    if (!/[a-z]/.test(pw)) return "Password must include a lowercase letter";
-    if (!/[0-9]/.test(pw)) return "Password must include a number";
-    if (!/[!@#$%^&*]/.test(pw))
-      return "Password must include a special character";
-    return null;
-  };
+  const { handleSubmit } = form;
 
   const onSubmit = async (data) => {
     const {
@@ -73,15 +526,8 @@ const Signup = () => {
       organizationName,
       role,
       acceptTerms,
+      phoneNo,
     } = data;
-
-    if (!name || name.trim().length < 3)
-      return alert("Name must be at least 3 characters");
-    if (!email.includes("@")) return alert("Please enter a valid email");
-    const pwError = validatePassword(password);
-    if (pwError) return alert(pwError);
-    if (password !== confirmPassword) return alert("Passwords do not match");
-    if (!acceptTerms) return alert("You must accept the Terms & Conditions");
 
     setLoading(true);
 
@@ -90,14 +536,14 @@ const Signup = () => {
         const user = { name, email, org: organizationName, role };
         localStorage.setItem(`user_${email}`, JSON.stringify(user));
         alert("User created successfully");
-        navigate(from, { replace: true });
+        navigate("/auth", { replace: true }); // ✅ redirect to login
         return;
       }
 
       if (!isOTPSent) {
         setIsOTPSent(true);
         setOpen(true);
-        alert("OTP sent to your email (simulated)");
+        alert("OTP sent (simulated)");
         return;
       }
 
@@ -115,22 +561,32 @@ const Signup = () => {
       localStorage.setItem(`user_${email}`, JSON.stringify(user));
       alert("Registered successfully");
       setOpen(false);
-      navigate(from, { replace: true });
-    } catch {
+      navigate("/auth", { replace: true }); // ✅ redirect to login
+    } catch (error) {
+      console.error("Registration error:", error);
       alert("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleInputChange = (index, value) => {
+    if (value.length > 1) return;
+    const updated = [...emailOtp];
+    updated[index] = value;
+    setEmailOtp(updated);
+    if (index < 5 && value) {
+      document.getElementById(`otp-index-${index + 1}`)?.focus();
+    }
+  };
+
   return (
     <>
+      {/* OTP Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-full max-w-xs sm:max-w-sm [&>button]:hidden rounded-lg shadow-lg">
-          <h3 className="text-center text-xl font-semibold mb-6 text-gray-900">
-            Enter OTP
-          </h3>
-          <div className="flex justify-center gap-3 mb-8 px-2">
+        <DialogContent className="w-full max-w-sm rounded-xl px-6 py-8 shadow-2xl">
+          <h3 className="text-xl font-bold text-center mb-6">Enter OTP</h3>
+          <div className="flex justify-center gap-3 mb-6">
             {emailOtp.map((value, index) => (
               <input
                 key={index}
@@ -138,7 +594,7 @@ const Signup = () => {
                 type="text"
                 maxLength={1}
                 autoFocus={index === 0}
-                className="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg font-mono border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg font-semibold border border-gray-300 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={value}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onKeyDown={(e) => {
@@ -153,7 +609,7 @@ const Signup = () => {
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
-              className="btn btn-primary px-6 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md font-semibold shadow-md transition"
             >
               {loading ? "Verifying..." : "Verify & Register"}
             </button>
@@ -161,174 +617,250 @@ const Signup = () => {
         </DialogContent>
       </Dialog>
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-50">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 sm:p-10">
+      {/* Register Form */}
+      <div className="flex justify-center items-center">
+        <Form {...form}>
           <form
-            className="flex flex-col gap-6"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 border dark:border-white/20 light:border-black/10 rounded-md p-10 w-96"
           >
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">
-              Sign Up
-            </h2>
+            <div className="flex items-center justify-center gap-1">
+              <User className="text-cyan-400 text-3xl" />
+              <h2 className="text-xl font-medium">Create Your Account</h2>
+            </div>
 
-            <label className="flex flex-col gap-2 text-gray-700">
-              <span className="font-semibold">
-                Name <span className="text-red-600">*</span>
-              </span>
-              <input
-                type="text"
-                placeholder="Your full name"
-                className="input input-bordered border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                {...register("name")}
-              />
-            </label>
-
-            {isSuperAdmin && (
-              <label className="flex flex-col gap-2 text-gray-700">
-                <span className="font-semibold">Organization</span>
-                <input
-                  type="text"
-                  placeholder="Organization name"
-                  className="input input-bordered border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("organizationName")}
-                />
-              </label>
-            )}
-
-            <label className="flex flex-col gap-2 text-gray-700">
-              <span className="font-semibold">
-                Email <span className="text-red-600">*</span>
-              </span>
-              <input
-                type="email"
-                placeholder="example@mail.com"
-                className="input input-bordered border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                {...register("email")}
-              />
-            </label>
-
-            <label className="flex flex-col gap-2 relative text-gray-700">
-              <span className="font-semibold">
-                Create Password <span className="text-red-600">*</span>
-              </span>
-              <Controller
-                control={control}
-                name="password"
-                render={({ field }) => (
-                  <div className="relative flex items-center">
-                    <input
-                      {...field}
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create Password"
-                      className="input input-bordered w-full border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label="Toggle Password Visibility"
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+            {/* name */}
+            <FormField
+              control={form.control}
+              name="name"
+              rules={{ required: "Name is required" }}
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1">
+                      <LuUser />
+                      <FormLabel>Name</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input placeholder="Enter your name" {...field} />
+                    </FormControl>
+                    <FormMessage />
                   </div>
+                </FormItem>
+              )}
+            />
+
+            {/* email */}
+            <FormField
+              control={form.control}
+              name="email"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Enter a valid email address",
+                },
+              }}
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1">
+                      <MdOutlineEmail />
+                      <FormLabel>Email</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* phone number */}
+            <FormField
+              control={form.control}
+              name="phoneNo"
+              rules={{
+                required: "Phone number is required",
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Phone number must be 10 digits",
+                },
+              }}
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1">
+                      <MdPhone />
+                      <FormLabel>Phone No.</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input placeholder="Enter your phone number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* organization name */}
+            {isSuperAdmin && (
+              <FormField
+                control={form.control}
+                name="organizationName"
+                rules={{ required: "Organization name is required" }}
+                render={({ field }) => (
+                  <FormItem className="space-y-4">
+                    <div className="space-y-2">
+                      <FormLabel>Organization Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter organization name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
                 )}
               />
-            </label>
-
-            <label className="flex flex-col gap-2 relative text-gray-700">
-              <span className="font-semibold">
-                Confirm Password <span className="text-red-600">*</span>
-              </span>
-
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Re-enter your password"
-                  className="input input-bordered w-full border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("confirmPassword", {
-                    validate: (value) =>
-                      value === watch("password") || "Passwords do not match",
-                  })}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label="Toggle Password Visibility"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
-                </button>
-              </div>
-
-              {errors.confirmPassword && (
-                <span className="text-sm text-red-600 mt-1">
-                  {errors.confirmPassword.message}
-                </span>
-              )}
-            </label>
-
-            {isSuperAdmin && (
-              <label className="flex flex-col gap-2 text-gray-700">
-                <span className="font-semibold">
-                  Role <span className="text-red-600">*</span>
-                </span>
-                <select
-                  className="input input-bordered border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("role")}
-                >
-                  {roles.map(({ label, value }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </label>
             )}
 
-            <label className="flex items-center gap-3 text-gray-700">
-              <input
-                type="checkbox"
-                className="checkbox checkbox-primary"
-                {...register("acceptTerms")}
+            {/* role (only for superadmin) */}
+            {isSuperAdmin && (
+              <FormField
+                control={form.control}
+                name="role"
+                rules={{ required: "Role is required" }}
+                render={({ field }) => (
+                  <FormItem className="space-y-4">
+                    <div className="space-y-2">
+                      <LuUser />
+                      <FormLabel>Role</FormLabel>
+                      <FormControl>
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {roles.map((role) => (
+                              <SelectItem key={role.value} value={role.value}>
+                                {role.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
-              <span className="text-sm">
-                I accept the{" "}
-                <Link to="#" className="link text-blue-600 hover:underline">
-                  Terms & Conditions
-                </Link>
-              </span>
-            </label>
+            )}
 
-            <button
+            {/* password */}
+            <FormField
+              control={form.control}
+              name="password"
+              rules={{ required: "Password is required" }}
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <div className="space-y-2">
+                    <IoLockClosedOutline />
+                    <FormLabel>Password</FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <div
+                        className="absolute right-3 top-2.5 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                      </div>
+                    </div>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* confirm password */}
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              rules={{
+                required: "Confirm Password is required",
+                validate: (value) =>
+                  value === form.watch("password") || "Passwords do not match",
+              }}
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <div className="space-y-2">
+                    <IoLockClosedOutline />
+                    <FormLabel>Confirm Password</FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showCPassword ? "text" : "password"}
+                          placeholder="Re-enter password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <div
+                        className="absolute right-3 top-2.5 cursor-pointer"
+                        onClick={() => setShowCPassword(!showCPassword)}
+                      >
+                        {showCPassword ? <FiEyeOff /> : <FiEye />}
+                      </div>
+                    </div>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* Terms */}
+            <FormField
+              control={form.control}
+              name="acceptTerms"
+              rules={{ required: "You must accept the terms and conditions" }}
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="terms"
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel htmlFor="terms" className="text-sm text-gray-600">
+                      I accept the{" "}
+                      <Link to="#" className="text-blue-600 underline">
+                        Terms & Conditions
+                      </Link>
+                    </FormLabel>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* Submit */}
+            <Button
+              className="w-full py-2 font-semibold text-sm bg-gradient-to-r from-blue-500 to-cyan-400 hover:scale-105 duration-700 transition-transform hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg"
               type="submit"
-              disabled={loading}
-              className="w-full mt-3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
             >
-              {loading
-                ? "Please wait..."
-                : isOTPSent
-                ? "Verify & Register"
-                : "Send OTP"}
-            </button>
-
-            <p className="text-center text-sm text-gray-600 mt-4">
-              Already have an account?{" "}
-              <Link
-                to="/auth/login"
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Sign In
-              </Link>
-            </p>
+              Register
+            </Button>
           </form>
-        </div>
+        </Form>
       </div>
     </>
   );
 };
+
 export default Signup;
