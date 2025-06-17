@@ -3,5 +3,6 @@ export const ROUTES = {
   HOMEPAGE: "/homepage",
   DASHBOARD: "/dashboard",
   SIDEBAR: "/sidebar",
-  FEEDBACK: "/feedback"
+  FEEDBACK: "/feedback",
+  USER:"/user"
 };

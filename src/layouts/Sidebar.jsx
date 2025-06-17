@@ -12,17 +12,19 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { FiMenu } from "react-icons/fi";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Home, Inbox, Search, Settings, User } from "lucide-react";
 import NavBar from "./NavBar";
 import { FiUsers } from "react-icons/fi";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import { Link, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { MdOutlineFeedback } from "react-icons/md";
+import { Outlet } from "react-router-dom";
 
 const Sidebar = () => {
   const items = [
     { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
+    { title: "User Management", url: ROUTES?.USER, icon: User },
     { title: "Feedback", url: "#", icon: MdOutlineFeedback },
     { title: "Calendar", url: "#", icon: Calendar },
     { title: "Search", url: "#", icon: Search },
@@ -48,7 +50,7 @@ const Sidebar = () => {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url} className="flex items-center space-x-2">
+                    <Link to={item.url} className="flex items-center space-x-2">
                       <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>
                     </Link>

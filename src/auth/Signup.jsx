@@ -764,8 +764,10 @@ const Signup = () => {
               render={({ field }) => (
                 <FormItem className="space-y-4">
                   <div className="space-y-2">
-                    <IoLockClosedOutline />
+                    <div className="flex gap-2 items-center">
+                      <IoLockClosedOutline />
                     <FormLabel>Password</FormLabel>
+                    </div>
                     <div className="relative">
                       <FormControl>
                         <Input
@@ -799,8 +801,10 @@ const Signup = () => {
               render={({ field }) => (
                 <FormItem className="space-y-4">
                   <div className="space-y-2">
-                    <IoLockClosedOutline />
+                    <div className="flex gap-2 items-center">
+                      <IoLockClosedOutline />
                     <FormLabel>Confirm Password</FormLabel>
+                    </div>
                     <div className="relative">
                       <FormControl>
                         <Input
@@ -851,7 +855,10 @@ const Signup = () => {
 
             {/* Submit */}
             <Button
-              className="w-full py-2 font-semibold text-sm bg-gradient-to-r from-blue-500 to-cyan-400 hover:scale-105 duration-700 transition-transform hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg"
+              className="w-full py-2 font-semibold text-sm bg-gradient-to-r
+               from-blue-500 to-cyan-400 hover:scale-105 duration-700
+                transition-transform hover:from-cyan-400 hover:to-blue-500
+                shadow hover:shadow-lg"
               type="submit"
             >
               Register
