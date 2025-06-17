@@ -19,7 +19,6 @@ import DashboardHome from "@/pages/dashboard/DashboardHome";
 import { Link, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { MdOutlineFeedback } from "react-icons/md";
-import { FaPeopleCarry } from "react-icons/fa";
 import Footer from "./Footer";
 import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 
