@@ -1,38 +1,27 @@
-// import React, { useState } from "react";
-// import { AddJob } from "./AddJob";
-// import SidebarWrapper from "@/layouts/Sidebar";
+// import SidebarWrapper from '@/layouts/Sidebar'
+// import React from 'react'
 
-// export default function JobList() {
-//   const [open, setOpen] = useState(false);
+// function Candidate() {
+//   console.log(Candidate,"Candidate");
 
 //   return (
-//      <>
-//      <SidebarWrapper>
-//       <div className="p-6">
-        
-      
-//         <button className="btn btn-primary" onClick={() => setOpen(true)}>
-//           + Add Job
-//         </button>
-//         <h1>Job Management</h1>
-//         <AddJob open={open} onOpenChange={() => setOpen(false)} />
-//     </div>
-//      </SidebarWrapper>
-    
-//      </>
-//   );
+//     <>
+//       <SidebarWrapper>
+//         <h1>Candidate</h1>
+//       </SidebarWrapper>
+//     </>
+//   )
 // }
+// export default Candidate
 
-
-// JobListPage.jsx
 import React, { useMemo, useState } from "react";
 import {
-  flexRender,
+  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  getPaginationRowModel,
+  flexRender,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,37 +35,57 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import SidebarWrapper from "@/layouts/Sidebar";
-import { AddJob } from "./AddJob";
+import { CreateCandidate } from "./CreateCandidate";
 
-const defaultJobs = [
-  {
-    id: 1,
-    jobTitle: "Frontend Developer",
-    department: "Engineering",
-    location: "Remote",
-    status: "Open",
-  },
+// Mock candidate data
+const defaultCandidates = [
+  { id: 1, name: "John Doe", email: "john@example.com", status: "applied" },
   {
     id: 2,
-    jobTitle: "Backend Developer",
-    department: "Engineering",
-    location: "On-site",
-    status: "Closed",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    status: "interviewing",
+  },
+  {
+    id: 3,
+    name: "Alice Johnson",
+    email: "alice@example.com",
+    status: "offered",
+  },
+  { id: 4, name: "Bob Brown", email: "bob@example.com", status: "rejected" },
+  {
+    id: 5,
+    name: "Charlie Lee",
+    email: "charlie@example.com",
+    status: "applied",
+  },
+  {
+    id: 6,
+    name: "Emily Green",
+    email: "emily@example.com",
+    status: "interviewing",
+  },
+  {
+    id: 7,
+    name: "Michael Scott",
+    email: "michael@example.com",
+    status: "hired",
+  },
+  {
+    id: 8,
+    name: "Angela White",
+    email: "angela@example.com",
+    status: "applied",
   },
 ];
 
-const JobListPage = () => {
-  const [data, setData] = useState(defaultJobs);
+const CandidateList = () => {
+  const [data, setData] = useState(defaultCandidates);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleAddJob = (newJob) => {
-    setData((prev) => [...prev, { id: prev.length + 1, ...newJob }]);
-    setOpenDialog(false);
-  };
-
   const handleDelete = (id) => {
-    setData((prev) => prev.filter((job) => job.id !== id));
+    setData((prev) => prev.filter((candidate) => candidate.id !== id));
   };
 
   const columns = useMemo(
@@ -99,18 +108,13 @@ const JobListPage = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "jobTitle",
-        header: "Job Title",
+        accessorKey: "name",
+        header: "Name",
         cell: (info) => info.getValue(),
       },
       {
-        accessorKey: "department",
-        header: "Department",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "location",
-        header: "Location",
+        accessorKey: "email",
+        header: "Email",
         cell: (info) => info.getValue(),
       },
       {
@@ -119,8 +123,14 @@ const JobListPage = () => {
         cell: (info) => (
           <span
             className={`px-2 py-1 text-xs rounded ${
-              info.getValue() === "Open"
+              info.getValue() === "applied"
+                ? "bg-blue-100 text-blue-700"
+                : info.getValue() === "interviewing"
+                ? "bg-yellow-100 text-yellow-700"
+                : info.getValue() === "offered"
                 ? "bg-green-100 text-green-700"
+                : info.getValue() === "hired"
+                ? "bg-green-200 text-green-800"
                 : "bg-red-100 text-red-700"
             }`}
           >
@@ -136,7 +146,7 @@ const JobListPage = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => console.log("Edit Job", row.original)}
+              onClick={() => setOpenDialog(true)}
             >
               Edit
             </Button>
@@ -173,26 +183,25 @@ const JobListPage = () => {
     <SidebarWrapper>
       <Card className="m-6">
         <CardContent className="p-4">
+          {/* Top Toolbar */}
           <div className="flex justify-between items-center mb-4">
             <Input
-              placeholder="Search jobs..."
+              placeholder="Search candidates..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="w-60"
             />
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
               <DialogTrigger asChild>
-                <Button onClick={() => setOpenDialog(true)}>+ Add Job</Button>
+                <Button onClick={() => setOpenDialog(true)}>
+                  + Add Candidate
+                </Button>
               </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Job</DialogTitle>
-                </DialogHeader>
-                <AddJob open={openDialog} onOpenChange={setOpenDialog} onSubmit={handleAddJob} />
-              </DialogContent>
+              <CreateCandidate open={openDialog} onOpenChange={setOpenDialog} />
             </Dialog>
           </div>
 
+          {/* Table */}
           <div className="overflow-x-auto rounded-md">
             <table className="min-w-full border text-sm">
               <thead>
@@ -208,10 +217,9 @@ const JobListPage = () => {
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted()] ?? ""}
+                        {{ asc: " 🔼", desc: " 🔽" }[
+                          header.column.getIsSorted()
+                        ] ?? ""}
                       </th>
                     ))}
                   </tr>
@@ -239,9 +247,11 @@ const JobListPage = () => {
             </table>
           </div>
 
+          {/* Footer Pagination */}
           <div className="flex justify-between items-center mt-4">
             <div className="text-xs text-muted-foreground">
-              Showing {table.getRowModel().rows.length} of {data.length} entries
+              Showing {table.getRowModel().rows.length} of {data.length}{" "}
+              candidates
             </div>
             <div className="space-x-2">
               <Button
@@ -268,4 +278,4 @@ const JobListPage = () => {
   );
 };
 
-export default JobListPage;
+export default CandidateList;

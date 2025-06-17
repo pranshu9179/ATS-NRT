@@ -1,30 +1,3 @@
-// import React, { useState } from "react";
-// import { AddJob } from "./AddJob";
-// import SidebarWrapper from "@/layouts/Sidebar";
-
-// export default function JobList() {
-//   const [open, setOpen] = useState(false);
-
-//   return (
-//      <>
-//      <SidebarWrapper>
-//       <div className="p-6">
-        
-      
-//         <button className="btn btn-primary" onClick={() => setOpen(true)}>
-//           + Add Job
-//         </button>
-//         <h1>Job Management</h1>
-//         <AddJob open={open} onOpenChange={() => setOpen(false)} />
-//     </div>
-//      </SidebarWrapper>
-    
-//      </>
-//   );
-// }
-
-
-// JobListPage.jsx
 import React, { useMemo, useState } from "react";
 import {
   flexRender,
@@ -34,6 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -46,37 +20,22 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import SidebarWrapper from "@/layouts/Sidebar";
-import { AddJob } from "./AddJob";
 
-const defaultJobs = [
-  {
-    id: 1,
-    jobTitle: "Frontend Developer",
-    department: "Engineering",
-    location: "Remote",
-    status: "Open",
-  },
-  {
-    id: 2,
-    jobTitle: "Backend Developer",
-    department: "Engineering",
-    location: "On-site",
-    status: "Closed",
-  },
+const defaultData = [
+  { id: 1, role: "Super Admin", module: "Users", access: "Full Access" },
+  { id: 2, role: "HR", module: "Jobs", access: "Read Only" },
+  { id: 3, role: "Interviewer", module: "Interviews", access: "Edit" },
+  { id: 4, role: "Candidate", module: "Dashboard", access: "Read Only" },
+  { id: 5, role: "HR", module: "Permissions", access: "No Access" },
 ];
 
-const JobListPage = () => {
-  const [data, setData] = useState(defaultJobs);
+const Permission = () => {
+  const [data, setData] = useState(defaultData);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleAddJob = (newJob) => {
-    setData((prev) => [...prev, { id: prev.length + 1, ...newJob }]);
-    setOpenDialog(false);
-  };
-
   const handleDelete = (id) => {
-    setData((prev) => prev.filter((job) => job.id !== id));
+    setData((prev) => prev.filter((item) => item.id !== id));
   };
 
   const columns = useMemo(
@@ -87,46 +46,50 @@ const JobListPage = () => {
           <Checkbox
             checked={table.getIsAllRowsSelected()}
             onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+            aria-label="Select all"
           />
         ),
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
           />
         ),
         enableSorting: false,
         enableHiding: false,
       },
       {
-        accessorKey: "jobTitle",
-        header: "Job Title",
+        accessorKey: "role",
+        header: "Role",
         cell: (info) => info.getValue(),
       },
       {
-        accessorKey: "department",
-        header: "Department",
+        accessorKey: "module",
+        header: "Module",
         cell: (info) => info.getValue(),
       },
       {
-        accessorKey: "location",
-        header: "Location",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-        cell: (info) => (
-          <span
-            className={`px-2 py-1 text-xs rounded ${
-              info.getValue() === "Open"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {info.getValue()}
-          </span>
-        ),
+        accessorKey: "access",
+        header: "Access Level",
+        cell: (info) => {
+          const value = info.getValue();
+          const colorMap = {
+            "Full Access": "bg-green-100 text-green-700",
+            "Read Only": "bg-yellow-100 text-yellow-700",
+            Edit: "bg-blue-100 text-blue-700",
+            "No Access": "bg-red-100 text-red-700",
+          };
+          return (
+            <span
+              className={`px-2 py-1 text-xs rounded font-medium ${
+                colorMap[value] || ""
+              }`}
+            >
+              {value}
+            </span>
+          );
+        },
       },
       {
         id: "actions",
@@ -136,7 +99,7 @@ const JobListPage = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => console.log("Edit Job", row.original)}
+              onClick={() => setOpenDialog(true)}
             >
               Edit
             </Button>
@@ -159,9 +122,7 @@ const JobListPage = () => {
   const table = useReactTable({
     data,
     columns,
-    state: {
-      globalFilter,
-    },
+    state: { globalFilter },
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -171,38 +132,45 @@ const JobListPage = () => {
 
   return (
     <SidebarWrapper>
-      <Card className="m-6">
-        <CardContent className="p-4">
-          <div className="flex justify-between items-center mb-4">
+      <Card className="m-6 shadow-sm rounded-2xl">
+        <CardContent className="p-4 space-y-4">
+          {/* Toolbar */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <Input
-              placeholder="Search jobs..."
+              placeholder="Search permissions..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="w-60"
+              className="w-full md:w-64"
             />
+
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
               <DialogTrigger asChild>
-                <Button onClick={() => setOpenDialog(true)}>+ Add Job</Button>
+                <Button onClick={() => setOpenDialog(true)}>
+                  + Create Permission
+                </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Add New Job</DialogTitle>
+                  <DialogTitle>Create/Edit Permission</DialogTitle>
                 </DialogHeader>
-                <AddJob open={openDialog} onOpenChange={setOpenDialog} onSubmit={handleAddJob} />
+                <div className="py-4 text-sm text-muted-foreground">
+                  Form UI goes here...
+                </div>
               </DialogContent>
             </Dialog>
           </div>
 
-          <div className="overflow-x-auto rounded-md">
-            <table className="min-w-full border text-sm">
-              <thead>
+          {/* Table */}
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="min-w-full text-sm">
+              <thead className="bg-muted">
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="bg-muted">
+                  <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="p-2 text-left cursor-pointer select-none"
                         onClick={header.column.getToggleSortingHandler()}
+                        className="p-2 text-left font-medium cursor-pointer select-none"
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -239,10 +207,11 @@ const JobListPage = () => {
             </table>
           </div>
 
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-xs text-muted-foreground">
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p className="text-xs text-muted-foreground">
               Showing {table.getRowModel().rows.length} of {data.length} entries
-            </div>
+            </p>
             <div className="space-x-2">
               <Button
                 variant="outline"
@@ -268,4 +237,4 @@ const JobListPage = () => {
   );
 };
 
-export default JobListPage;
+export default Permission;

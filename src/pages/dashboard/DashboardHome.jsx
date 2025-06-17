@@ -11,7 +11,7 @@ const DashboardHome = () => {
   return (
     <>
       <SidebarWrapper>
-        <div className=" space-y-5">
+        <div className=" space-y-5 ">
           <h1 className="text-lg font-medium">Welcome back, Admin 👋</h1>
           {/* Summaray card */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -90,9 +90,9 @@ const DashboardHome = () => {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-800">Tanvii Vermaa</span>
+                    <span className="text-sm text-gray-800">Tanvi Verma</span>
                     <span className="text-sm text-gray-900 font-medium">
-                      Full Stack Develper
+                      Full Stack Developer
                     </span>
                   </div>
                 </div>
@@ -159,9 +159,9 @@ const DashboardHome = () => {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-800">Anvi Vermaa</span>
+                    <span className="text-sm text-gray-800">Anvi Verma</span>
                     <span className="text-sm text-gray-900 font-medium">
-                      Frontend Develper
+                      Frontend Developer
                     </span>
                   </div>
                 </div>

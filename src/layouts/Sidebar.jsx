@@ -12,20 +12,25 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { FiMenu } from "react-icons/fi";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Group, Home, Inbox, LucideUserRoundPlus, Search, Settings } from "lucide-react";
 import NavBar from "./NavBar";
 import { FiUsers } from "react-icons/fi";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import { Link, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { MdOutlineFeedback } from "react-icons/md";
+import { FaPeopleCarry } from "react-icons/fa";
+import Footer from "./Footer";
+import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 
 const Sidebar = () => {
   const items = [
-    { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
-    { title: "Feedback", url: "#", icon: MdOutlineFeedback },
+    { title: "Dashboard", url: ROUTES?.DASHBOARD, icon: Home },
+    { title: "User Management", url:ROUTES?.USER_MANAGEMENT, icon: LuUsersRound  },
+    { title: "Permissions", url:ROUTES?.PERMISSIONS, icon: LuUsersRound  },
+    { title: "Candidate Management", url: ROUTES?.CANDIDATE_MANAGEMENT, icon: LuSquareUserRound  },
+    { title: "Job Management", url:ROUTES?.JOB_MANAGEMENT , icon: MdOutlineFeedback },
     { title: "Calendar", url: "#", icon: Calendar },
-    { title: "Search", url: "#", icon: Search },
     { title: "Settings", url: "#", icon: Settings },
   ];
 
@@ -48,7 +53,7 @@ const Sidebar = () => {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url} className="flex items-center space-x-2">
+                    <Link to={item.url} className="flex items-center space-x-2">
                       <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -62,7 +67,6 @@ const Sidebar = () => {
     </ShadcnSidebar>
   );
 };
-
 const SidebarWrapper = ({ children }) => {
   return (
     <SidebarProvider className=" w-full h-screen">
@@ -72,11 +76,14 @@ const SidebarWrapper = ({ children }) => {
 
       <div className=" w-full bg-gray-100">
         <div className="sticky top-0 shadow">
-          <NavBar />
+          <NavBar />  
         </div>
-        <div className="bg-white h-screen overflow-y-auto p-8 m-2">
+        <div className="bg-white h-screen overflow-y-auto p-8 m-4 rounded-2xl ">
           {children}
         </div>
+      </div>
+      <div className="bg-white">
+        <Footer />
       </div>
     </SidebarProvider>
   );
