@@ -147,6 +147,9 @@ import { ROUTES } from "@/utils";
 import { MdOutlineFeedback } from "react-icons/md";
 import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
+import { MdOutlineLockPerson } from "react-icons/md";
+import { UserCog, Users } from "lucide-react";
 
 const Sidebar = () => {
   const items = [
@@ -156,7 +159,9 @@ const Sidebar = () => {
       url: ROUTES?.USER_MANAGEMENT,
       icon: LuUsersRound,
     },
-    { title: "Permissions", url: ROUTES?.PERMISSIONS, icon: LuUsersRound },
+// { title: "Permissions", url:ROUTES?.ROLES_PERMISSIONS, icon: LuUsersRound  },
+{ title: "Roles", url: ROUTES.ROLES, icon: UserCog },
+{ title: "Permission", url: ROUTES.PERMISSION, icon: MdOutlineLockPerson },
     {
       title: "Candidate Management",
       url: ROUTES?.CANDIDATE_MANAGEMENT,
@@ -168,7 +173,15 @@ const Sidebar = () => {
       icon: MdOutlineFeedback,
     },
     { title: "Calendar", url: "#", icon: Calendar },
-    { title: "Settings", url: "#", icon: Settings },
+
+
+// const Sidebar = () => {
+//   const items = [
+//     { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
+//     { title: "User Management", url: ROUTES?.USER, icon: User },
+
+//     { title: "Search", url: "#", icon: Search },
+//     { title: "Settings", url: "#", icon: Settings },
   ];
 
   return (
@@ -210,6 +223,8 @@ const SidebarWrapper = ({ children }) => {
     <SidebarProvider className="w-full h-screen flex bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-white">
       {/* Sidebar */}
       <div className="bg-white dark:bg-zinc-900">
+    {/* <SidebarProvider className=" w-full min-h-screen"> */}
+      {/* <div className="bg-white"> */}
         <Sidebar />
       </div>
 
@@ -222,6 +237,7 @@ const SidebarWrapper = ({ children }) => {
 
         {/* Page Content */}
         <div className="bg-white dark:bg-zinc-900 h-screen overflow-y-auto p-8 m-4 rounded-2xl shadow">
+        {/* <div className="bg-white p-8 m-2"> */}
           {children}
         </div>
 

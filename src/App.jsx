@@ -1,21 +1,3 @@
-// // App.jsx
-// import React from "react";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import AuthLayout from "./layouts/AuthLayout";
-// import { ROUTES } from "./utils";
-// import DashboardHome from "./pages/dashboard/DashboardHome";
-// import SidebarWrapper from "./layouts/Sidebar";
-
-// export default function App() {
-//   return (
-//     <Routes>
-//       <Route exact path={ROUTES?.AUTH} element={<AuthLayout />} />
-//       <Route exact path={ROUTES?.DASHBOARD} element={<DashboardHome />} />
-//       <Route exact path={ROUTES?.SIDEBAR} element={<SidebarWrapper/>} />
-//     </Routes>
-//   );
-// }
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
@@ -28,7 +10,8 @@ import JobList from "./pages/jobManagement/JobList";
 import NotFound from "./pages/notFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoutes";
-import Permission from "./pages/roles&permissionManagement/Permissions";
+import Permission from "./pages/roles&permissionManagement/permission/Permission";
+import Roles from "./pages/roles&permissionManagement/roles/Roles";
 
 export default function App() {
   return (
@@ -85,10 +68,18 @@ export default function App() {
         }
       />
       <Route
-        path={ROUTES?.PERMISSIONS}
+        path={ROUTES?.PERMISSION}
         element={
           <ProtectedRoute>
             <Permission />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ROUTES?.ROLES}
+        element={
+          <ProtectedRoute>
+            <Roles />
           </ProtectedRoute>
         }
       />
