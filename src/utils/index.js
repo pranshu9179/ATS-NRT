@@ -4,9 +4,11 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   SIDEBAR: "/sidebar",
   FEEDBACK: "/feedback",
-  CANDIDATE_MANAGEMENT:"/candidate",
-  USER_MANAGEMENT:"/user",
-  JOB_MANAGEMENT:"/job-list",
-  PERMISSIONS:"/permissions",
-  NOT_FOUND:"not-found"
+  PERMISSION: "/permission",
+  ROLES: "/roles",
+  FEEDBACK: "/feedback",
+  CANDIDATE_MANAGEMENT: "/candidate",
+  USER_MANAGEMENT: "/user",
+  JOB_MANAGEMENT: "/job-list",
+  NOT_FOUND: "not-found",
 };
