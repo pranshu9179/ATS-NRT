@@ -7,6 +7,6 @@ export const ROUTES = {
   CANDIDATE_MANAGEMENT:"/candidate",
   USER_MANAGEMENT:"/user",
   JOB_MANAGEMENT:"/job-list",
-  PERMISSIONS:"/permissions",
+  ROLES_PERMISSIONS:"/roles-permissions",
   NOT_FOUND:"not-found"
 };

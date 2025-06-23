@@ -26,7 +26,7 @@ const Sidebar = () => {
   const items = [
     { title: "Dashboard", url: ROUTES?.DASHBOARD, icon: Home },
     { title: "User Management", url:ROUTES?.USER_MANAGEMENT, icon: LuUsersRound  },
-    { title: "Permissions", url:ROUTES?.PERMISSIONS, icon: LuUsersRound  },
+    { title: "Permissions", url:ROUTES?.ROLES_PERMISSIONS, icon: LuUsersRound  },
     { title: "Candidate Management", url: ROUTES?.CANDIDATE_MANAGEMENT, icon: LuSquareUserRound  },
     { title: "Job Management", url:ROUTES?.JOB_MANAGEMENT , icon: MdOutlineFeedback },
     { title: "Calendar", url: "#", icon: Calendar },

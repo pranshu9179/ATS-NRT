@@ -28,7 +28,8 @@ import JobList from "./pages/jobManagement/JobList";
 import NotFound from "./pages/notFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoutes";
-import Permission from "./pages/roles&permissionManagement/Permissions";
+// import Permission from "./pages/roles&permissionManagement/Permissions";
+import RolePermissionsPage from "./pages/roles&permissionManagement/Roles";
 
 export default function App() {
   return (
@@ -85,10 +86,10 @@ export default function App() {
         }
       />
       <Route
-        path={ROUTES?.PERMISSIONS}
+        path={ROUTES?.ROLES_PERMISSIONS}
         element={
           <ProtectedRoute>
-            <Permission />
+            <RolePermissionsPage/>
           </ProtectedRoute>
         }
       />
