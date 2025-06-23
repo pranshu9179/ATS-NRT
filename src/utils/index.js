@@ -9,4 +9,5 @@ export const ROUTES = {
   JOB_MANAGEMENT:"/job-list",
   ROLES_PERMISSIONS:"/roles-permissions",
   NOT_FOUND:"not-found"
+  //comment
 };
