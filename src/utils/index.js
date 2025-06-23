@@ -4,5 +4,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   SIDEBAR: "/sidebar",
   FEEDBACK: "/feedback",
-  USER:"/user"
+  USER:"/user",
+  PERMISSION:"/permission",
+  ROLES:"/roles"
 };

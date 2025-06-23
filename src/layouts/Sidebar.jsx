@@ -20,13 +20,15 @@ import { Link, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { MdOutlineFeedback } from "react-icons/md";
 import { Outlet } from "react-router-dom";
+import { MdOutlineLockPerson } from "react-icons/md";
+import { UserCog, Users } from "lucide-react";
 
 const Sidebar = () => {
   const items = [
     { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
     { title: "User Management", url: ROUTES?.USER, icon: User },
-    { title: "Feedback", url: "#", icon: MdOutlineFeedback },
-    { title: "Calendar", url: "#", icon: Calendar },
+    { title: "Permission", url: ROUTES.PERMISSION, icon: MdOutlineLockPerson },
+    { title: "Roles", url: ROUTES.ROLES, icon: UserCog },
     { title: "Search", url: "#", icon: Search },
     { title: "Settings", url: "#", icon: Settings },
   ];
@@ -67,7 +69,7 @@ const Sidebar = () => {
 
 const SidebarWrapper = ({ children }) => {
   return (
-    <SidebarProvider className=" w-full h-screen">
+    <SidebarProvider className=" w-full min-h-screen">
       <div className="bg-white">
         <Sidebar />
       </div>
@@ -76,7 +78,7 @@ const SidebarWrapper = ({ children }) => {
         <div className="sticky top-0 shadow">
           <NavBar />
         </div>
-        <div className="bg-white h-screen overflow-y-auto p-8 m-2">
+        <div className="bg-white p-8 m-2">
           {children}
         </div>
       </div>

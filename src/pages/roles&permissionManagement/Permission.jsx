@@ -54,58 +54,103 @@ import AddUser from "../userManagement/AddUser";
 import { FaPlus } from "react-icons/fa";
 import CreatePermission from "./CreatePermission";
 import { MdOutlineLockPerson } from "react-icons/md";
-import CreateRoles from "./CreateRoles";
-import { UserCog, ShieldCheck, Users, Settings } from "lucide-react";
 
 const data = [
   {
-    name: "Ram verma",
-    userType: "HR",
-    createdAt: "2024-06-01T10:15:00Z",
+    id: "p1",
+    role: "Admin",
+    module: "users",
+    view: true,
+    create: true,
+    edit: true,
+    delete: true,
   },
   {
-    name: "Rahul yadav",
-    userType: "Interviewer",
-    createdAt: "2024-06-02T14:20:00Z",
+    id: "p2",
+    role: "Admin",
+    module: "jobs",
+    view: true,
+    create: true,
+    edit: true,
+    delete: true,
   },
   {
-    name: "Tanvi Verma ",
-    userType: "Candidate",
-    createdAt: "2024-06-03T08:10:00Z",
+    id: "p3",
+    role: "HR",
+    module: "candidates",
+    view: true,
+    create: true,
+    edit: true,
+    delete: false,
   },
   {
-    name: "Anjali Sharma",
-    userType: "Recruiter",
-    createdAt: "2024-06-04T09:00:00Z",
+    id: "p4",
+    role: "HR",
+    module: "interviews",
+    view: true,
+    create: true,
+    edit: true,
+    delete: false,
   },
   {
-    name: "Suresh verma",
-    userType: "Hiring Manager",
-    createdAt: "2024-06-05T17:45:00Z",
+    id: "p5",
+    role: "Interviewer",
+    module: "candidates",
+    view: true,
+    create: false,
+    edit: false,
+    delete: false,
   },
   {
-    name: "Priya sharma",
-    userType: "Vendor",
-    createdAt: "2024-06-06T12:30:00Z",
+    id: "p6",
+    role: "Interviewer",
+    module: "interviews",
+    view: true,
+    create: false,
+    edit: true,
+    delete: false,
   },
   {
-    name: "Karan  verma",
-    userType: "Admin",
-    createdAt: "2024-06-07T16:00:00Z",
+    id: "p7",
+    role: "Candidate",
+    module: "jobs",
+    view: true,
+    create: false,
+    edit: false,
+    delete: false,
+  },
+  {
+    id: "p8",
+    role: "Candidate",
+    module: "profile",
+    view: true,
+    create: false,
+    edit: true,
+    delete: false,
+  },
+
+  {
+    id: "p12",
+    role: "Admin",
+    module: "reports",
+    view: true,
+    create: false,
+    edit: false,
+    delete: false,
   },
 ];
 
-export default function Roles() {
+export default function Permission() {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [open, setOpen] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
-  const [selectedRole, setselectedRole] = useState(null);
-  const [RoleList, setRoleList] = useState(data);
+  const [selectedPermission, setselectedPermission] = useState(null);
+  const [permissionList, setPermissionList] = useState(data);
 
-  console.log("selectedRole", selectedRole);
+  console.log("selectedPermission", selectedPermission);
 
   const columns = [
     {
@@ -131,36 +176,20 @@ export default function Roles() {
       enableHiding: false,
     },
     {
-      accessorKey: "name",
-      header: "Name",
+      accessorKey: "role",
+      header: "Role",
       cell: ({ row }) => (
-        <div className="capitalize text-[14px]">{row.getValue("name")}</div>
+        <div className="capitalize text-[14px]">{row.getValue("role")}</div>
       ),
     },
     {
-      accessorKey: "userType",
-      header: "UserType",
+      accessorKey: "module",
+      header: "Module",
       cell: ({ row }) => (
         <div className="capitalize text-[14px] cursor-pointer">
-          {row.getValue("userType")}
+          {row.getValue("module")}
         </div>
       ),
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Created At",
-      cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"));
-        return (
-          <div className="text-sm text-gray-700">
-            {date.toLocaleDateString("en-IN", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </div>
-        );
-      },
     },
 
     {
@@ -195,7 +224,7 @@ export default function Roles() {
   };
 
   const handleRefresh = () => {
-    setRoleList([...data]);
+    setPermissionList([...data]);
     setRowSelection({});
     setSorting([]);
     setColumnFilters([]);
@@ -227,19 +256,15 @@ export default function Roles() {
 
   return (
     <SidebarWrapper>
-      {/* Add role form dilaogue model */}
+      {/* Add Permission form dilaogue model */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-full max-w-5xl max-h-[90vh] rounded-xl px-6 py-4 shadow-2xl space-y-3">
-          {/* Fixed Header */}
-          <div className="flex items-center gap-2 sticky top-0  z-10 pb-2">
-            <UserCog className="text-[12px]" />
-            <h2 className="text-lg font-medium">Create Role</h2>
+        <DialogContent className="w-full max-w-5xl rounded-xl px-6 py-4 shadow-2xl space-y-3 ">
+          <div className="flex gap-2 items-center">
+            <MdOutlineLockPerson className="text-xl" />
+            <h3 className="text-lg font-semibold ">Create Permission</h3>
           </div>
 
-          {/* Scrollable Content */}
-          <div className="overflow-y-auto max-h-[70vh] pr-2">
-            <CreateRoles setOpen={setOpen} />
-          </div>
+          <CreatePermission setOpen={setOpen} />
         </DialogContent>
       </Dialog>
 
@@ -249,11 +274,11 @@ export default function Roles() {
           <div className="flex flex-col  gap-4 items-center">
             <MdOutlineLockPerson className="text-xl" />
             <h3 className="text-lg font-medium ">
-              Are you sure you want to delete this Roles?
+              Are you sure you want to delete this permission?
             </h3>
             <div className="space-x-2">
               <button
-                onClick={() => handleDelete(selectedRole?.id)}
+                onClick={() => handleDelete(selectedPermission?.id)}
                 className="bg-green-500 text-white px-4 py-[8px]
                 rounded-lg shadow-md hover:bg-green-800 transition
                 duration-300 text-sm font-medium  "
@@ -273,14 +298,14 @@ export default function Roles() {
         </DialogContent>
       </Dialog>
       <div className="w-full">
-        <h2 className="text-lg font-semibold">Roles</h2>
+        <h2 className="text-lg font-semibold">Permission</h2>
         <div className="flex justify-between items-center py-4">
           <div className="relative ">
             <Input
               placeholder="Search...."
-              value={table.getColumn("name")?.getFilterValue() ?? ""}
+              value={table.getColumn("role")?.getFilterValue() ?? ""}
               onChange={(event) =>
-                table.getColumn("name")?.setFilterValue(event.target.value)
+                table.getColumn("role")?.setFilterValue(event.target.value)
               }
               className="pl-8 w-96"
             />
@@ -299,7 +324,7 @@ export default function Roles() {
                 duration-300 text-sm flex gap-1 items-center"
               >
                 <FaPlus />
-                Add Role
+                Create
               </button>
             </div>
             <div className=" border border-black/10 p-2">

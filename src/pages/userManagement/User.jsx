@@ -453,63 +453,96 @@ export default function User() {
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex space-x-2 py-4">
           <div className="text-muted-foreground flex-1 text-sm">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>
           {/* Pagination */}
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              First
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Prev
-            </Button>
+         <div>
+           <Pagination>
+            <PaginationContent>
+              {/* Prev */}
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.previousPage();
+                  }}
+                  className={
+                    table.getCanPreviousPage()
+                      ? ""
+                      : "pointer-events-none opacity-50"
+                  }
+                />
+              </PaginationItem>
 
-            {/* Generate numbered pagination buttons */}
-            {Array.from({ length: table.getPageCount() }, (_, index) => (
-              <Button
-                key={index}
-                variant={
-                  table.getState().pagination.pageIndex === index
-                    ? "default"
-                    : "outline"
-                }
-                size="sm"
-                onClick={() => table.setPageIndex(index)}
-              >
-                {index + 1}
-              </Button>
-            ))}
+              {/* Page 1 */}
+              <PaginationItem>
+                <PaginationLink
+                  href="#"
+                  isActive={table.getState().pagination.pageIndex === 0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.setPageIndex(0);
+                  }}
+                >
+                  1
+                </PaginationLink>
+              </PaginationItem>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              Last
-            </Button>
-          </div>
+              {/* Page 2 */}
+              <PaginationItem>
+                <PaginationLink
+                  href="#"
+                  isActive={table.getState().pagination.pageIndex === 1}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.setPageIndex(1);
+                  }}
+                >
+                  2
+                </PaginationLink>
+              </PaginationItem>
+
+              {/* Page 3 */}
+              <PaginationItem>
+                <PaginationLink
+                  href="#"
+                  isActive={table.getState().pagination.pageIndex === 2}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.setPageIndex(2);
+                  }}
+                >
+                  3
+                </PaginationLink>
+              </PaginationItem>
+
+              {/* Ellipsis */}
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+
+              {/* Next */}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.nextPage();
+                  }}
+                  className={
+                    table.getCanNextPage()
+                      ? ""
+                      : "pointer-events-none opacity-50"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+         </div>
         </div>
       </div>
     </SidebarWrapper>
