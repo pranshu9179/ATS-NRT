@@ -231,22 +231,28 @@ export default function Login() {
 
   const onSubmit = (data) => {
     console.log("Form data:", data);
-    // alert("Login successfully");
+
+    // ✅ Set login session in localStorage
+    localStorage.setItem("isLoggedIn", "true");
+
     form.reset();
-    navigate(ROUTES?.DASHBOARD);
+
+    // ✅ Force full reload so ProtectedRoute reads updated localStorage
+    window.location.href = ROUTES?.DASHBOARD;
   };
 
   return (
-    <div className="flex justify-center items-center  ">
-      <Form {...form} className=" ">
+    <div className="flex justify-center items-center">
+      <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 border border-black/10 rounded-md p-10 w-96  "
+          className="space-y-6 border border-black/10 rounded-md p-10 w-96"
         >
           <div className="flex items-center justify-center gap-1">
             <User className=" text-cyan-400 text-3xl" />
-            <h2 className="text-xl font-medium ">Login Your Account</h2>
+            <h2 className="text-xl font-medium">Login Your Account</h2>
           </div>
+
           <FormField
             control={form.control}
             name="email"
@@ -264,13 +270,8 @@ export default function Login() {
                     <MdOutlineEmail className="text-gray-600" />
                     <FormLabel>Email</FormLabel>
                   </div>
-
                   <FormControl>
-                    <Input
-                      placeholder="Enter your email"
-                      {...field}
-                      className=""
-                    />
+                    <Input placeholder="Enter your email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </div>
@@ -293,7 +294,7 @@ export default function Login() {
             render={({ field }) => (
               <FormItem className="space-y-4">
                 <div className="space-y-2">
-                  <div className=" flex gap-1 items-center">
+                  <div className="flex gap-1 items-center">
                     <IoLockClosedOutline />
                     <FormLabel>Password</FormLabel>
                   </div>
@@ -320,9 +321,9 @@ export default function Login() {
 
           <Button
             className="w-full py-2 font-semibold text-sm bg-gradient-to-r
-             from-blue-500 to-cyan-400 
-          hover:scale-105 duration-700  transition-transform 
-          hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg  "
+              from-blue-500 to-cyan-400 
+              hover:scale-105 duration-700 transition-transform 
+              hover:from-cyan-400 hover:to-blue-500 shadow hover:shadow-lg"
             type="submit"
           >
             Login
@@ -332,8 +333,6 @@ export default function Login() {
     </div>
   );
 }
-
-
 
 // // src/pages/Login.jsx
 // import { useLayout } from "@/providers/LayoutProvider";
