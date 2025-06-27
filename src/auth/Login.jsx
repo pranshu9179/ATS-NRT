@@ -83,7 +83,7 @@ const Login = () => {
               // pattern: {
               //   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               //   message: "Please enter a valid email address",
-              // },
+              // },vxcvv
             }}
             render={({ field }) => (
               <FormItem className="space-y-4">
