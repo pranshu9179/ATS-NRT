@@ -173,7 +173,7 @@ const SubmitButton = ({ isLoading }) => {
   );
 };
 
-const AddJob = ({ open, onOpenChange }) => {
+const AddJob = ({ open, onOpenChange, onSubmit: onSubmitProp, editingData  }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submittedJobs, setSubmittedJobs] = useState([]);
 
@@ -207,20 +207,33 @@ const AddJob = ({ open, onOpenChange }) => {
 
     const now = new Date();
     const endDate = new Date(data.endDate);
-    const status = endDate >= now ? 'active' : 'expired';
+    const status = endDate >= now ? 'Open' : 'Closed';
 
     const jobData = {
+       id: Date.now(), 
       ...data,
       status
     };
 
-    setTimeout(() => {
-      setSubmittedJobs(prev => [...prev, jobData]);
-      console.log('Submitted Job:', jobData);
-      // toast.success('Job (dummy) created successfully!');
-      setIsLoading(false);
-      closeModel();
-    }, 1000);
+  //   setTimeout(() => {
+  //     setSubmittedJobs(prev => [...prev, jobData]);
+  //     console.log('Submitted Job:', jobData);
+  //     // toast.success('Job (dummy) created successfully!');
+  //     setIsLoading(false);
+  //     closeModel();
+  //   }, 1000);
+  // };
+  setTimeout(() => {
+  // setSubmittedJobs(prev => [...prev, jobData]);
+  // console.log('Submitted Job:', jobData);
+
+  if (typeof onSubmitProp === "function") {
+    onSubmitProp(jobData); // ✅ This sends data to parent (JobListPage)
+  }
+
+  setIsLoading(false);
+  closeModel();
+}, 1000);
   };
 
   return (
@@ -339,6 +352,18 @@ const AddJob = ({ open, onOpenChange }) => {
             <SubmitButton isLoading={isLoading} />
           </DialogFooter>
         </form>
+        {submittedJobs.length > 0 && (
+          <div className="mt-6 p-4 border rounded bg-gray-100">
+            <h3 className="text-lg font-semibold mb-2">Created Jobs (Dummy Data):</h3>
+            <ul className="list-disc list-inside text-sm space-y-1">
+              {submittedJobs.map((job, index) => (
+                <li key={index}>
+                  <strong>{job.jobTitle}</strong> — {job.status}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
