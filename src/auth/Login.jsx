@@ -16,11 +16,14 @@ import { User } from "lucide-react";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useMutation } from "@apollo/client";
+import { LoginApi } from "@/Api/Mutation";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState(""); // <-- added for feedback
   const navigate = useNavigate();
+  const [loginUser, { data, loading, error }] = useMutation(LoginApi);
 
   const form = useForm({
     defaultValues: {
@@ -29,22 +32,30 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    const savedUser = JSON.parse(localStorage.getItem("token"));
+  const onSubmit = async (formData) => {
+    setStatus("");
 
-    if (
-      !savedUser ||
-      savedUser.email !== data.email ||
-      savedUser.password !== data.password
-    ) {
-      setStatus("The login details are incorrect");
-      return;
+    try {
+      const { data } = await loginUser({
+        variables: {
+          email: "nrt@gmail.com", // or use formData.email
+          password: "newrise123", // or use formData.password
+        },
+      });
+
+      // Check if login data exists
+      if (data?.login?.token) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.login.token);
+        localStorage.setItem("user", JSON.stringify(data.login.user));
+
+        navigate("/dashboard");
+      } else {
+        setStatus("Login failed. Please check your credentials.");
+      }
+    } catch (err) {
+      setStatus("Login failed. Server error.");
     }
-
-    // ✅ Login successful
-    localStorage.setItem("isLoggedIn", "true");
-    form.reset();
-    window.location.href = ROUTES?.DASHBOARD;
   };
 
   return (
@@ -69,10 +80,10 @@ const Login = () => {
             name="email"
             rules={{
               required: "Email is required",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Please enter a valid email address",
-              },
+              // pattern: {
+              //   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              //   message: "Please enter a valid email address",
+              // },
             }}
             render={({ field }) => (
               <FormItem className="space-y-4">
@@ -95,12 +106,12 @@ const Login = () => {
             name="password"
             rules={{
               required: "Password is required",
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message:
-                  "Password must be at least 8 characters, include upper/lowercase, number, and special character",
-              },
+              // pattern: {
+              //   value:
+              //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+              //   message:
+              //     "Password must be at least 8 characters, include upper/lowercase, number, and special character",
+              // },
             }}
             render={({ field }) => (
               <FormItem className="space-y-4">
@@ -145,7 +156,6 @@ const Login = () => {
   );
 };
 export default Login;
-
 
 // import { ROUTES } from "@/utils";
 // import React, { useState } from "react";
