@@ -17,8 +17,6 @@
 //     </React.StrictMode>
 // )
 
-
-
 //  main.jsx *
 
 //  import React from "react";
@@ -36,8 +34,7 @@
 //       </BrowserRouter>
 //     </ThemeProvider>
 //   </React.StrictMode>
-// ); 
-
+// );
 
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -46,15 +43,19 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider.jsx";
 import "./index.css";
 import { LayoutProvider } from "./providers/LayoutProvider.jsx";
+import { ApolloProvider } from "@apollo/client";
+import client from "./apoloClient/apolloClient.js";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-    <LayoutProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-      </LayoutProvider>
+      <ApolloProvider client={client}>
+        <LayoutProvider>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </LayoutProvider>
+      </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

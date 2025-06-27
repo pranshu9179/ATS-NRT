@@ -237,7 +237,7 @@ const SidebarWrapper = ({ children }) => {
         </div>
 
         {/* Page Content */}
-        <div className="bg-white dark:bg-zinc-900 h-screen overflow-y-auto p-8 m-4 rounded-2xl shadow">
+        <div className="bg-white dark:bg-zinc-900 h-screen overflow-y-auto p-8 m-2 rounded shadow">
         {/* <div className="bg-white p-8 m-2"> */}
           {children}
         </div>
