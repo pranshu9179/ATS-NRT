@@ -144,12 +144,13 @@ import {
 import NavBar from "./NavBar";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/utils";
-import { MdOutlineFeedback } from "react-icons/md";
+import { MdFeedback, MdOutlineFeedback } from "react-icons/md";
 import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import { MdOutlineLockPerson } from "react-icons/md";
 import { UserCog, Users } from "lucide-react";
+import Feedback from "@/pages/feedback/Feedback";
 
 const Sidebar = () => {
   const items = [
@@ -172,7 +173,7 @@ const Sidebar = () => {
       url: ROUTES?.JOB_MANAGEMENT,
       icon: MdOutlineFeedback,
     },
-    { title: "Calendar", url: "#", icon: Calendar },
+    { title: "Feedback", url: ROUTES?.Feedback, icon :MdOutlineFeedback},
 
 
 // const Sidebar = () => {

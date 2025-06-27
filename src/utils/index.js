@@ -1,3 +1,5 @@
+import Notification from "@/pages/notification/Notification";
+
 export const ROUTES = {
   AUTH: "",
   HOMEPAGE: "/homepage",
@@ -10,5 +12,7 @@ export const ROUTES = {
   CANDIDATE_MANAGEMENT: "/candidate",
   USER_MANAGEMENT: "/user",
   JOB_MANAGEMENT: "/job-list",
+  NOTIFICATION: "/notifications",
+  Feedback: "/feedback",
   NOT_FOUND: "not-found",
 };
