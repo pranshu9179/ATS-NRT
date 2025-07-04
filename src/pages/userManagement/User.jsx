@@ -537,53 +537,66 @@ import ViewUser from "./ViewUser";
 const data = [
   {
     id: "5kma53ae",
-    name: "Silas Rhodes",
+    firstName: "Silas",
+    lastName: "Rhodes",
     email: "silas22@example.com",
-    role: "DevOps Engineer",
-    experience: 4,
-    location: "Berlin, Germany",
-    appliedDate: "2025-06-08",
-    status: "success",
+    role: "HR",
+    password: "Abcd123",
+    mobileNo: "12435354646",
   },
   {
-    id: "f8kd90wl",
-    name: "Isla Rivera",
-    email: "isla.rivera@example.com",
-    role: "Full Stack Developer",
-    experience: 4,
-    location: "Delhi, India",
-    appliedDate: "2025-06-06",
-    status: "success",
+    id: "8dke24ru",
+    firstName: "Maya",
+    lastName: "Singh",
+    email: "maya.singh@example.com",
+    role: "HR",
+    password: "Maya1234",
+    mobileNo: "9876543210",
   },
   {
-    id: "x7nq29dj",
-    name: "Leah Matthews",
-    email: "leah.matthews@example.com",
-    role: "Backend Developer",
-    experience: 6,
-    location: "London, UK",
-    appliedDate: "2025-06-10",
-    status: "success",
+    id: "9fje64tu",
+    firstName: "Aarav",
+    lastName: "Mehta",
+    email: "aarav.mehta@example.com",
+    role: "Interviewer",
+    password: "Aarav2023",
+    mobileNo: "9123456789",
   },
   {
-    id: "q1lz77jk",
-    name: "Damon Frye",
-    email: "damon.frye@example.com",
-    role: "UI Designer",
-    experience: 2,
-    location: "Austin, USA",
-    appliedDate: "2025-06-11",
-    status: "failed",
+    id: "3plm29qp",
+    firstName: "Emily",
+    lastName: "Clarkeee",
+    email: "emily.clark@example.com",
+    role: "Interviewer",
+    password: "EmilyUX@1",
+    mobileNo: "7894561230",
   },
   {
-    id: "e0wz35mn",
-    name: "Rhea Singh",
-    email: "rhea.singh@example.com",
-    role: "Product Designer",
-    experience: 5,
-    location: "Mumbai, India",
-    appliedDate: "2025-06-08",
-    status: "success",
+    id: "7rty12az",
+    firstName: "John",
+    lastName: "Doerrr",
+    email: "john.doe@example.com",
+    role: "Interviewer",
+    password: "JohnDoe@123",
+    mobileNo: "9988776655",
+  },
+  {
+    id: "4xwc45mq",
+    firstName: "Nina",
+    lastName: "Patel",
+    email: "nina.patel@example.com",
+    role: "Admin",
+    password: "NinaQATest",
+    mobileNo: "8855664433",
+  },
+  {
+    id: "2bvc89pl",
+    firstName: "Ravi",
+    lastName: "Kumar",
+    email: "ravi.kumar@example.com",
+    role: "Admin",
+    password: "Ravi@Sys2024",
+    mobileNo: "9988001122",
   },
 ];
 
@@ -598,13 +611,15 @@ const User = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userslist, setUserList] = useState(data);
 
+  console.log("selectedUser", selectedUser);
+
   const handleView = (user) => {
     setSelectedUser(user);
     setOpenViewPage(true);
   };
 
   const handleDelete = (userId) => {
-    console.log(userId);
+    setUserList((prev) => prev.filter((user) => user.id !== userId));
     setOpenDeleteModel(false);
   };
 
@@ -639,14 +654,26 @@ const User = () => {
       enableHiding: false,
     },
     {
-      accessorKey: "name",
-      header: "Name",
+      accessorKey: "firstName",
+      header: "FirstName",
       cell: ({ row }) => (
         <div
           onClick={() => handleView(row.original)}
           className="capitalize text-[14px] hover:underline cursor-pointer hover:text-cyan-500"
         >
-          {row.getValue("name")}
+          {row.getValue("firstName")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "lastName",
+      header: "LastName",
+      cell: ({ row }) => (
+        <div
+          onClick={() => handleView(row.original)}
+          className="capitalize text-[14px] hover:underline cursor-pointer hover:text-cyan-500"
+        >
+          {row.getValue("lastName")}
         </div>
       ),
     },
@@ -673,21 +700,13 @@ const User = () => {
       ),
     },
     {
-      accessorKey: "experience",
-      header: "Experience",
+      accessorKey: "password",
+      header: "Password",
       cell: ({ row }) => (
-        <div className="capitalize text-[14px]">
-          {row.getValue("experience")}
-        </div>
+        <div className="capitalize text-[14px]">{row.getValue("password")}</div>
       ),
     },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px]">{row.getValue("status")}</div>
-      ),
-    },
+
     {
       id: "actions",
       header: () => (
@@ -701,6 +720,10 @@ const User = () => {
           <div className="flex justify-center items-center gap-2">
             <button type="button">
               <LuSquarePen
+                onClick={() => {
+                  setSelectedUser(user);
+                  setOpen(true);
+                }}
                 size={18}
                 className="text-blue-600 hover:text-blue-800 cursor-pointer"
               />
@@ -758,13 +781,9 @@ const User = () => {
 
   return (
     <SidebarWrapper>
-      <Dialog open={open} onOpenChange={setOpen} >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="w-full max-w-5xl rounded-xl px-4 sm:px-6 py-4 shadow-2xl space-y-3">
-          <div className="flex gap-2 items-center">
-            <FiUserPlus className="text-xl" />
-            <h3 className="text-xl font-semibold">Create User</h3>
-          </div>
-          <AddUser setOpen={setOpen} />
+          <AddUser setOpen={setOpen} selectedUser={selectedUser} />
         </DialogContent>
       </Dialog>
 
@@ -820,11 +839,13 @@ const User = () => {
           <div className="flex gap-3 items-center">
             <button
               onClick={() => setOpen(true)}
-              className="bg-black text-white px-4  py-[12px] rounded-lg shadow-md hover:bg-gray-800 transition duration-300 text-sm flex gap-1 items-center"
+              className="bg-black text-white px-4 py-[8px]
+                rounded-lg shadow-md hover:bg-gray-800 transition
+                duration-300 text-sm flex gap-1 items-center"
               title="Add User"
             >
               <FaUserPlus />
-             Create User
+              Create User
             </button>
             <div className="border border-black/10 rounded-xl p-2 bg-gray-100 hover:text-gray-500">
               <MdRefresh

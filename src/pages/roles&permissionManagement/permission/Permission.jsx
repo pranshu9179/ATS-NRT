@@ -183,18 +183,25 @@ export default function Permission() {
       id: "actions",
       header: () => <div className="text-center font-medium">Actions</div>,
       cell: ({ row }) => {
-        const user = row.original;
+        const permission = row.original;
         return (
           <div className="flex justify-center items-center gap-2">
             <button type="button">
               <FaEdit
+                onClick={() => {
+                  setselectedPermission(permission);
+                  setOpen(true);
+                }}
                 size={18}
                 className="text-blue-600 hover:text-blue-800 cursor-pointer"
               />
             </button>
             <button type="button">
               <MdDelete
-                onClick={() => setOpenDeleteModel(true)}
+                onClick={() => {
+                  setselectedPermission(permission);
+                  setOpenDeleteModel(true);
+                }}
                 size={20}
                 className="text-red-500 hover:text-red-700 cursor-pointer"
               />
@@ -205,8 +212,10 @@ export default function Permission() {
     },
   ];
 
-  const handleDelete = (userId) => {
-    console.log(userId);
+  const handleDelete = (Id) => {
+    setPermissionList((prev) =>
+      prev.filter((permission) => permission.id !== Id)
+    );
     setOpenDeleteModel(false);
   };
 
@@ -218,7 +227,7 @@ export default function Permission() {
   };
 
   const table = useReactTable({
-    data,
+    data: permissionList,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -246,12 +255,22 @@ export default function Permission() {
       {/* Add Permission form dilaogue model */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="w-full max-w-5xl rounded-xl px-6 py-4 shadow-2xl space-y-3 ">
-          <div className="flex gap-2 items-center">
-            <MdOutlineLockPerson className="text-xl" />
-            <h3 className="text-lg font-semibold ">Create Permission</h3>
-          </div>
+          {selectedPermission ? (
+            <div className="flex gap-2 items-center">
+              <MdOutlineLockPerson className="text-xl" />
+              <h3 className="text-lg font-semibold ">Edit Permission</h3>
+            </div>
+          ) : (
+            <div className="flex gap-2 items-center">
+              <MdOutlineLockPerson className="text-xl" />
+              <h3 className="text-lg font-semibold ">Create Permission</h3>
+            </div>
+          )}
 
-          <CreatePermission setOpen={setOpen} />
+          <CreatePermission
+            setOpen={setOpen}
+            selectedPermission={selectedPermission}
+          />
         </DialogContent>
       </Dialog>
 

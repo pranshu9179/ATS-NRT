@@ -30,6 +30,8 @@ const Login = () => {
   });
 
   const onSubmit = (data) => {
+    localStorage.setItem("token", JSON.stringify(data));
+
     const savedUser = JSON.parse(localStorage.getItem("token"));
 
     if (
@@ -95,12 +97,12 @@ const Login = () => {
             name="password"
             rules={{
               required: "Password is required",
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message:
-                  "Password must be at least 8 characters, include upper/lowercase, number, and special character",
-              },
+              // pattern: {
+              //   value:
+              //     /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
+              //   message:
+              //     "Password must be at least 8 characters, include upper/lowercase, number, and special character",
+              // },
             }}
             render={({ field }) => (
               <FormItem className="space-y-4">
@@ -144,7 +146,7 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default Login;
 
 
 // import { ROUTES } from "@/utils";

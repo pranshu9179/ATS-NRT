@@ -46,12 +46,14 @@ const permissionsSchema = [
 
 const userType = [
   { label: "HR", value: "HR" },
-  { label: "Interviewer", value: "INTERVIEWER" },
-  { label: "Admin", value: "ADMIN" },
-];
+  { label: "Interviewer", value: "Interviewer" }, 
+  { label: "Admin", value: "Admin" },             ]
 
-const CreateRoles = () => {
+
+const CreateRoles = ({ selectedRole }) => {
   const navigate = useNavigate();
+
+  console.log("selectedRole", selectedRole);
 
   const form = useForm({
     defaultValues: {
@@ -60,6 +62,13 @@ const CreateRoles = () => {
       userType: "",
     },
   });
+
+  const { handleSubmit, setValue } = form; 
+
+  if (selectedRole?.id) {
+    setValue("name", selectedRole?.name);
+    setValue("userType", selectedRole?.userType);
+  }
 
   const onSubmit = (data) => {
     console.log("Form data:", data);

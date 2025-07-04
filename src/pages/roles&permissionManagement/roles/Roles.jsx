@@ -51,42 +51,87 @@ import { FaPlus } from "react-icons/fa";
 
 import { MdOutlineLockPerson } from "react-icons/md";
 import CreateRoles from "./CreateRoles";
-import { UserCog} from "lucide-react";
+import { UserCog } from "lucide-react";
+
+// const data = [
+//   {
+//     name: "Ram verma",
+//     userType: "HR",
+//     createdAt: "2024-06-01T10:15:00Z",
+//   },
+//   {
+//     name: "Rahul yadav",
+//     userType: "Interviewer",
+//     createdAt: "2024-06-02T14:20:00Z",
+//   },
+//   {
+//     name: "Tanvi Verma ",
+//     userType: "Candidate",
+//     createdAt: "2024-06-03T08:10:00Z",
+//   },
+//   {
+//     name: "Anjali Sharma",
+//     userType: "Recruiter",
+//     createdAt: "2024-06-04T09:00:00Z",
+//   },
+//   {
+//     name: "Suresh verma",
+//     userType: "Hiring Manager",
+//     createdAt: "2024-06-05T17:45:00Z",
+//   },
+//   {
+//     name: "Priya sharma",
+//     userType: "Vendor",
+//     createdAt: "2024-06-06T12:30:00Z",
+//   },
+//   {
+//     name: "Karan  verma",
+//     userType: "Admin",
+//     createdAt: "2024-06-07T16:00:00Z",
+//   },
+// ];
 
 const data = [
   {
+    id: 1,
     name: "Ram verma",
     userType: "HR",
     createdAt: "2024-06-01T10:15:00Z",
   },
   {
+    id: 2,
     name: "Rahul yadav",
     userType: "Interviewer",
     createdAt: "2024-06-02T14:20:00Z",
   },
   {
+    id: 3,
     name: "Tanvi Verma ",
-    userType: "Candidate",
+    userType: "Admin",
     createdAt: "2024-06-03T08:10:00Z",
   },
   {
+    id: 4,
     name: "Anjali Sharma",
-    userType: "Recruiter",
+    userType: "Admin",
     createdAt: "2024-06-04T09:00:00Z",
   },
   {
+    id: 5,
     name: "Suresh verma",
-    userType: "Hiring Manager",
+    userType: "Interviewer",
     createdAt: "2024-06-05T17:45:00Z",
   },
   {
+    id: 6,
     name: "Priya sharma",
-    userType: "Vendor",
+    userType: "Interviewer",
     createdAt: "2024-06-06T12:30:00Z",
   },
   {
+    id: 7,
     name: "Karan  verma",
-    userType: "Admin",
+    userType: "Interviewer",
     createdAt: "2024-06-07T16:00:00Z",
   },
 ];
@@ -163,18 +208,30 @@ export default function Roles() {
       id: "actions",
       header: () => <div className="text-center font-medium">Actions</div>,
       cell: ({ row }) => {
-        const user = row.original;
+        const role = row.original;
         return (
           <div className="flex justify-center items-center gap-2">
             <button type="button">
               <FaEdit
+                onClick={() => {
+                  setselectedRole(role);
+                  setOpen(true);
+                }}
                 size={18}
                 className="text-blue-600 hover:text-blue-800 cursor-pointer"
               />
             </button>
             <button type="button">
-              <MdDelete
+              {/* <MdDelete
                 onClick={() => setOpenDeleteModel(true)}
+                size={20}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+              /> */}
+              <MdDelete
+                onClick={() => {
+                  setselectedRole(user);
+                  setOpenDeleteModel(true);
+                }}
                 size={20}
                 className="text-red-500 hover:text-red-700 cursor-pointer"
               />
@@ -185,8 +242,9 @@ export default function Roles() {
     },
   ];
 
-  const handleDelete = (userId) => {
-    console.log(userId);
+  const handleDelete = (roleId) => {
+    console.log(roleId);
+    setRoleList((prev) => prev.filter((role) => role.id !== roleId));
     setOpenDeleteModel(false);
   };
 
@@ -198,7 +256,7 @@ export default function Roles() {
   };
 
   const table = useReactTable({
-    data,
+    data: RoleList,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -226,15 +284,21 @@ export default function Roles() {
       {/* Add role form dilaogue model */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="w-full max-w-5xl max-h-[90vh] rounded-xl px-6 py-4 shadow-2xl space-y-3">
-          {/* Fixed Header */}
-          <div className="flex items-center gap-2 sticky top-0  z-10 pb-2">
-            <UserCog className="text-[12px]" />
-            <h2 className="text-lg font-medium">Create Role</h2>
-          </div>
+          {selectedRole ? (
+            <div className="flex items-center gap-2 sticky top-0  z-10 pb-2">
+              <UserCog className="text-[12px]" />
+              <h2 className="text-lg font-medium">Edit Role</h2>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 sticky top-0  z-10 pb-2">
+              <UserCog className="text-[12px]" />
+              <h2 className="text-lg font-medium">Create Role</h2>
+            </div>
+          )}
 
           {/* Scrollable Content */}
           <div className="overflow-y-auto max-h-[70vh] pr-2">
-            <CreateRoles setOpen={setOpen} />
+            <CreateRoles setOpen={setOpen} selectedRole={selectedRole} />
           </div>
         </DialogContent>
       </Dialog>

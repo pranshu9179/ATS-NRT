@@ -30,11 +30,15 @@ import { MdPhone } from "react-icons/md";
 
 const roles = [
   { label: "HR", value: "HR" },
-  { label: "Interviewer", value: "INTERVIEWER" },
-  { label: "Admin", value: "ADMIN" },
+  { label: "Interviewer", value: "Interviewer" },
+  { label: "Admin", value: "Admin" },
 ];
 
-const CreatePermission = ({ setOpen }) => {
+const CreatePermission = ({ setOpen , selectedPermission }) => {
+
+  console.log("selectedPermission",selectedPermission);
+  
+
   const [loading, setLoading] = useState(false);
   const { currentLayout } = useLayout();
   const navigate = useNavigate();
@@ -46,7 +50,12 @@ const CreatePermission = ({ setOpen }) => {
     },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit ,setValue } = form;
+
+  if (selectedPermission?.id) {
+    setValue("module", selectedPermission?.module);
+    setValue("role", selectedPermission?.role);
+  }
 
   const onSubmit = async (data) => {
     const { module, role } = data;

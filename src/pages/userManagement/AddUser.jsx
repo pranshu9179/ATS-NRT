@@ -72,7 +72,7 @@
 //           <form
 //             onSubmit={form.handleSubmit(onSubmit)}
 //             className="  max-w-5xl
-//             light:border-black/10 rounded-md 
+//             light:border-black/10 rounded-md
 //             w-full space-y-8 "
 //           >
 //             <div className="grid grid-cols-2 gap-3 gap-y-4 place-content-center w-full">
@@ -281,8 +281,7 @@
 
 // export default AddUser;
 
-
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -311,35 +310,59 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { MdPhone } from "react-icons/md";
+import { FiUserPlus } from "react-icons/fi";
 
 const roles = [
   { label: "HR", value: "HR" },
-  { label: "Interviewer", value: "INTERVIEWER" },
-  { label: "Admin", value: "ADMIN" },
+  { label: "Interviewer", value: "Interviewer" },
+  { label: "Admin", value: "Admin" },
 ];
 
-const AddUser = ({ setOpen }) => {
+const AddUser = ({ setOpen, selectedUser }) => {
+  console.log("selectedUserdata", selectedUser);
+
   const [showPassword, setShowPassword] = useState(false);
-  const [showCPassword, setShowCPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { currentLayout } = useLayout();
   const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
-      confirmPassword: "",
-      phoneNo: "",
+      mobileNo: "",
       role: "",
     },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, setValue } = form;
+
+ if (selectedUser?.id) {
+  setValue("firstName", selectedUser?.firstName);
+  setValue("lastName", selectedUser?.lastName);
+  setValue("email", selectedUser?.email);
+  setValue("password", selectedUser?.password);
+  setValue("mobileNo", selectedUser?.mobileNo);
+  setValue("role", selectedUser?.role);
+}
+
+useEffect(() => {
+  if (selectedUser?.id) {
+    form.reset({
+      firstName: selectedUser.firstName || "",
+      lastName: selectedUser.lastName || "",
+      email: selectedUser.email || "",
+      password: selectedUser.password || "",
+      mobileNo: selectedUser.mobileNo || "",
+      role: selectedUser.role || "",
+    });
+  }
+}, [selectedUser, form]);
 
   const onSubmit = async (data) => {
-    const { name, email, password, confirmPassword, role, phoneNo } = data;
+    const { firstName, lastName, email, password, role, mobileNo } = data;
     console.log(data);
 
     setLoading(true);
@@ -351,27 +374,60 @@ const AddUser = ({ setOpen }) => {
   return (
     <>
       {/* Create user Form */}
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col gap-6">
+        {
+          selectedUser ? 
+          (<div className="flex gap-2 items-center">
+          <FiUserPlus className="text-xl" />
+          <h3 className="text-xl font-semibold">Edit User</h3>
+        </div>) :(
+          <div className="flex gap-2 items-center">
+          <FiUserPlus className="text-xl" />
+          <h3 className="text-xl font-semibold">Create User</h3>
+        </div>
+        )
+        }
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="max-w-5xl light:border-black/10 rounded-md w-full space-y-8"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 gap-y-4 place-content-center w-full">
-              {/* name */}
+              {/* Fistname */}
               <FormField
                 control={form.control}
-                name="name"
-                rules={{ required: "Name is required" }}
+                name="firstName"
+                rules={{ required: "FirstName is required" }}
                 render={({ field }) => (
                   <FormItem className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-center gap-1">
                         <LuUser />
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>FirstName</FormLabel>
                       </div>
                       <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
+                        <Input placeholder="Enter your firstName" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              {/* Lastname */}
+              <FormField
+                control={form.control}
+                name="lastName"
+                rules={{ required: "LastName is required" }}
+                render={({ field }) => (
+                  <FormItem className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1">
+                        <LuUser />
+                        <FormLabel>LastName</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Input placeholder="Enter your lastName" {...field} />
                       </FormControl>
                       <FormMessage />
                     </div>
@@ -399,37 +455,6 @@ const AddUser = ({ setOpen }) => {
                       </div>
                       <FormControl>
                         <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              {/* phone number */}
-              <FormField
-                control={form.control}
-                name="phoneNo"
-                rules={{
-                  required: "Phone number is required",
-                  pattern: {
-                    value: /^[0-9]{10}$/,
-                    message: "Phone number must be 10 digits",
-                  },
-                }}
-                render={({ field }) => (
-                  <FormItem className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1">
-                        <MdPhone />
-                        <FormLabel>Phone No.</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter your phone number"
-                          {...field}
-                        />
                       </FormControl>
                       <FormMessage />
                     </div>
@@ -470,38 +495,31 @@ const AddUser = ({ setOpen }) => {
                 )}
               />
 
-              {/* confirm password */}
+              {/* phone number */}
               <FormField
                 control={form.control}
-                name="confirmPassword"
+                name="mobileNo"
                 rules={{
-                  required: "Confirm Password is required",
-                  validate: (value) =>
-                    value === form.watch("password") ||
-                    "Passwords do not match",
+                  required: "Mobile number is required",
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Mobile number must be 10 digits",
+                  },
                 }}
                 render={({ field }) => (
                   <FormItem className="space-y-4">
                     <div className="space-y-2">
-                      <div className="flex gap-1 items-center">
-                        <IoLockClosedOutline />
-                        <FormLabel>Confirm Password</FormLabel>
+                      <div className="flex items-center gap-1">
+                        <MdPhone />
+                        <FormLabel>Mobile No.</FormLabel>
                       </div>
-                      <div className="relative">
-                        <FormControl>
-                          <Input
-                            type={showCPassword ? "text" : "password"}
-                            placeholder="Re-enter password"
-                            {...field}
-                          />
-                        </FormControl>
-                        <div
-                          className="absolute right-3 top-2.5 cursor-pointer"
-                          onClick={() => setShowCPassword(!showCPassword)}
-                        >
-                          {showCPassword ? <FiEyeOff /> : <FiEye />}
-                        </div>
-                      </div>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Enter your mobile number"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </div>
                   </FormItem>
