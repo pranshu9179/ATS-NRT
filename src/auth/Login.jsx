@@ -67,7 +67,9 @@ const Login = () => {
         >
           <div className="flex items-center justify-center gap-1">
             <User className=" text-cyan-400 text-3xl" />
-            <h2 className="text-xl font-medium">Login Your Account</h2>
+            <h2 className="text-xl font-medium dark:text-black">
+              Login Your Account
+            </h2>
           </div>
 
           {/* Error message (only if status is set) */}
@@ -90,7 +92,7 @@ const Login = () => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-1">
                     <MdOutlineEmail className="text-gray-600" />
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="dark:text-black">Email</FormLabel>
                   </div>
                   <FormControl>
                     <Input placeholder="Enter your email" {...field} />
@@ -117,8 +119,8 @@ const Login = () => {
               <FormItem className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex gap-1 items-center">
-                    <IoLockClosedOutline />
-                    <FormLabel>Password</FormLabel>
+                    <IoLockClosedOutline className="dark:stroke-black" />
+                    <FormLabel className="dark:text-black">Password</FormLabel>
                   </div>
                   <div className="relative">
                     <FormControl>

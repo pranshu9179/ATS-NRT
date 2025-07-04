@@ -91,7 +91,74 @@ export const PermissionList = gql`
         search
         permission_group
         sortBy
-        sortOrder
+      }
+    }
+  }
+`;
+
+export const UsersList = gql`
+  query UsersList(
+    $page: Int
+    $limit: Int
+    $search: String
+    $isverified: Boolean
+    $userType: String
+    $roleId: Int
+    $sortBy: String
+  ) {
+    usersList(
+      page: $page
+      limit: $limit
+      search: $search
+      isverified: $isverified
+      userType: $userType
+      roleId: $roleId
+      sortBy: $sortBy
+    ) {
+      data {
+        id
+        firstName
+        lastName
+        email
+        password
+        role_names
+        mobileNo
+        userType
+        is_blocked
+        created_at
+        updated_at
+        token
+      }
+      pagination {
+        currentPage
+        limit
+        totalCount
+        totalPages
+        hasNextPage
+        hasPreviousPage
+        nextPage
+        previousPage
+      }
+      filters {
+        search
+        isverified
+        userType {
+          id
+          firstName
+          lastName
+          email
+          password
+          role_names
+          mobileNo
+          userType
+          is_blocked
+          created_at
+          updated_at
+          token
+        }
+        roleId
+        sortBy
+        
       }
     }
   }
