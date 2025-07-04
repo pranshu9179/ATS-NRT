@@ -87,7 +87,7 @@ export default function Permission() {
       id: "actions",
       header: () => <div className="text-center font-medium">Actions</div>,
       cell: ({ row }) => {
-        const user = row.original;
+        const permission = row.original;
         return (
           <div className="flex justify-center items-center gap-2">
             <button type="button">

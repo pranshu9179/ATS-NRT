@@ -157,7 +157,7 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default Login;
 
 // import { ROUTES } from "@/utils";
 // import React, { useState } from "react";

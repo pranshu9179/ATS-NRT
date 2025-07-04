@@ -34,38 +34,45 @@ import { formatDate } from "@/components/FormatDate";
 
 const initialData = [
   {
+    id: 1,
     name: "Ram verma",
     userType: "HR",
     createdAt: "2024-06-01T10:15:00Z",
   },
   {
+    id: 2,
     name: "Rahul yadav",
     userType: "Interviewer",
     createdAt: "2024-06-02T14:20:00Z",
   },
   {
+    id: 3,
     name: "Tanvi Verma ",
-    userType: "Candidate",
+    userType: "Admin",
     createdAt: "2024-06-03T08:10:00Z",
   },
   {
+    id: 4,
     name: "Anjali Sharma",
-    userType: "Recruiter",
+    userType: "Admin",
     createdAt: "2024-06-04T09:00:00Z",
   },
   {
+    id: 5,
     name: "Suresh verma",
-    userType: "Hiring Manager",
+    userType: "Interviewer",
     createdAt: "2024-06-05T17:45:00Z",
   },
   {
+    id: 6,
     name: "Priya sharma",
-    userType: "Vendor",
+    userType: "Interviewer",
     createdAt: "2024-06-06T12:30:00Z",
   },
   {
+    id: 7,
     name: "Karan  verma",
-    userType: "Admin",
+    userType: "Interviewer",
     createdAt: "2024-06-07T16:00:00Z",
   },
 ];
@@ -148,22 +155,23 @@ export default function Roles() {
       id: "actions",
       header: () => <div className="text-center font-medium">Actions</div>,
       cell: ({ row }) => {
-        const user = row.original;
+        const role = row.original;
         return (
           <div className="flex justify-center items-center gap-2">
             <button type="button">
               <FaEdit
+                onClick={() => {
+                  setselectedRole(role);
+                  setOpen(true);
+                }}
                 size={18}
                 className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                onClick={() => {
-                  console.log("Edit role:", user);
-                }}
               />
             </button>
             <button
               type="button"
               onClick={() => {
-                setselectedRole(user);
+                setselectedRole(role);
                 setOpenViewPage(true);
               }}
             >
@@ -175,7 +183,7 @@ export default function Roles() {
             <button type="button">
               <MdDelete
                 onClick={() => {
-                  setselectedRole(user);
+                  setselectedRole(role);
                   setOpenDeleteModel(true);
                 }}
                 size={20}
