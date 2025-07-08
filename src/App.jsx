@@ -14,8 +14,8 @@ import Permission from "./pages/roles&permissionManagement/permission/Permission
 import Roles from "./pages/roles&permissionManagement/roles/Roles";
 
 function App() {
-  const [activePage, setActivePage] = useState("dashboard");
-  const [isOpen, setIsOpen] = useState(false);
+  // const [activePage, setActivePage] = useState("dashboard");
+  // const [isOpen, setIsOpen] = useState(false);
 //comment
   return (
     <Routes>
