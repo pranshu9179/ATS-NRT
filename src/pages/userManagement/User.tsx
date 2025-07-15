@@ -14,8 +14,7 @@
 // import { Search } from "lucide-react";
 // import { FaUserPlus } from "react-icons/fa";
 // import { MdDelete, MdRefresh } from "react-icons/md";
-// import { LuSquarePen, LuEye, LuUser } from "react-icons/lu";
-// import { FiUserPlus } from "react-icons/fi";
+// import { LuSquarePen, LuEye } from "react-icons/lu";
 
 // import { Checkbox } from "@/components/ui/checkbox";
 // import { Input } from "@/components/ui/input";
@@ -44,7 +43,9 @@
 //   const [selectedUser, setSelectedUser] = useState(null);
 //   const [userslist, setUserList] = useState([]);
 
-//   const [fetchUsers, { data: userData }] = useLazyQuery(UsersList);
+//   const [fetchUsers, { data: userData }] = useLazyQuery(UsersList, {
+//     fetchPolicy: "network-only",
+//   });
 
 //   useEffect(() => {
 //     fetchUsers();
@@ -177,7 +178,8 @@
 //     <SidebarWrapper>
 //       <Dialog open={open} onOpenChange={setOpen}>
 //         <DialogContent className={undefined}>
-//           <AddUser setOpen={setOpen} />
+//           {/* ✅ Pass refetchUsers */}
+//           <AddUser setOpen={setOpen} refetchUsers={fetchUsers} />
 //         </DialogContent>
 //       </Dialog>
 
@@ -335,6 +337,8 @@
 
 // export default User;
 
+
+
 "use client";
 import React, { useEffect, useState } from "react";
 import {
@@ -384,112 +388,93 @@ const User = () => {
     fetchPolicy: "network-only",
   });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    if (userData?.usersList?.data) {
-      console.log("✅ API Data:", userData.usersList.data);
-      setUserList(userData.usersList.data);
-    }
-  }, [userData]);
-
-  const columns = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className={undefined}
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className={undefined}
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "name",
-      header: "Name",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px] cursor-pointer">
-          {row.original?.firstName} {row.original?.lastName}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "email",
-      header: "Email",
-      cell: ({ row }) => (
-        <div className="text-[14px]">{row.original?.email}</div>
-      ),
-    },
-    {
-      accessorKey: "role_names",
-      header: "Role",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px]">
-          {row.original?.role_names?.[0] || "N/A"}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "userType",
-      header: "User Type",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px] cursor-pointer">
-          {row.original?.userType}
-        </div>
-      ),
-    },
-    {
-      id: "actions",
-      header: () => <div className="text-center font-bold">Actions</div>,
-      cell: ({ row }) => {
-        const user = row.original;
-        return (
-          <div className="flex justify-center gap-2">
-            <LuSquarePen
-              size={18}
-              className="text-blue-600 hover:text-blue-800 cursor-pointer"
-            />
-            <LuEye
-              size={18}
-              className="text-blue-600 hover:text-blue-800 cursor-pointer"
-              onClick={() => {
-                setSelectedUser(user);
-                setOpenViewPage(true);
-              }}
-            />
-            <MdDelete
-              size={20}
-              className="text-red-500 hover:text-red-700 cursor-pointer"
-              onClick={() => {
-                setSelectedUser(user);
-                setOpenDeleteModel(true);
-              }}
-            />
-          </div>
-        );
-      },
-    },
-  ];
-
   const table = useReactTable({
     data: userslist,
-    columns,
+    columns: [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all" className={undefined}          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row" className={undefined}          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+        cell: ({ row }) => (
+          <div className="capitalize text-[14px] cursor-pointer">
+            {row.original?.firstName} {row.original?.lastName}
+          </div>
+        ),
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+        cell: ({ row }) => (
+          <div className="text-[14px]">{row.original?.email}</div>
+        ),
+      },
+      {
+        accessorKey: "role_names",
+        header: "Role",
+        cell: ({ row }) => (
+          <div className="capitalize text-[14px]">
+            {row.original?.role_names?.[0] || "N/A"}
+          </div>
+        ),
+      },
+      {
+        accessorKey: "userType",
+        header: "User Type",
+        cell: ({ row }) => (
+          <div className="capitalize text-[14px] cursor-pointer">
+            {row.original?.userType}
+          </div>
+        ),
+      },
+      {
+        id: "actions",
+        header: () => <div className="text-center font-bold">Actions</div>,
+        cell: ({ row }) => {
+          const user = row.original;
+          return (
+            <div className="flex justify-center gap-2">
+              <LuSquarePen
+                size={18}
+                className="text-blue-600 hover:text-blue-800 cursor-pointer"
+              />
+              <LuEye
+                size={18}
+                className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                onClick={() => {
+                  setSelectedUser(user);
+                  setOpenViewPage(true);
+                }}
+              />
+              <MdDelete
+                size={20}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+                onClick={() => {
+                  setSelectedUser(user);
+                  setOpenDeleteModel(true);
+                }}
+              />
+            </div>
+          );
+        },
+      },
+    ],
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -511,17 +496,39 @@ const User = () => {
     },
   });
 
+  // 🔍 Get table state values
+  const pageIndex = table.getState().pagination.pageIndex + 1; // GraphQL is 1-based
+  const pageSize = table.getState().pagination.pageSize;
+  const emailFilter = columnFilters.find((filter) => filter.id === "email");
+  const searchValue = emailFilter?.value || "";
+
+  // 🔁 Fetch data from API whenever pagination or filters change
+  useEffect(() => {
+    fetchUsers({
+      variables: {
+        page: pageIndex,
+        limit: pageSize,
+        search: searchValue,
+      },
+    });
+  }, [pageIndex, pageSize, searchValue]);
+
+  useEffect(() => {
+    if (userData?.usersList?.data) {
+      setUserList(userData.usersList.data);
+    }
+  }, [userData]);
+
   return (
     <SidebarWrapper>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className={undefined}>
-          {/* ✅ Pass refetchUsers */}
+        <DialogContent className={undefined} >
           <AddUser setOpen={setOpen} refetchUsers={fetchUsers} />
         </DialogContent>
       </Dialog>
 
       <Dialog open={openViewPage} onOpenChange={setOpenViewPage}>
-        <DialogContent className={undefined}>
+        <DialogContent className={undefined} >
           <ViewUser user={selectedUser} setOpenViewPage={setOpenViewPage} />
         </DialogContent>
       </Dialog>
@@ -534,27 +541,26 @@ const User = () => {
             <Input
               placeholder="Filter emails..."
               value={table.getColumn("email")?.getFilterValue() ?? ""}
-              onChange={(e) =>
-                table.getColumn("email")?.setFilterValue(e.target.value)
-              }
-              className="pl-8 w-96"
-              type={undefined}
-            />
+              onChange={(e) => table.getColumn("email")?.setFilterValue(e.target.value)}
+              className="pl-8 w-96" type={undefined}            />
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           </div>
 
           <div className="flex gap-3 items-center">
-            <Button
-              onClick={() => setOpen(true)}
-              className={undefined}
-              variant={undefined}
-              size={undefined}
-            >
+            <Button onClick={() => setOpen(true)} className={undefined} variant={undefined} size={undefined}>
               <FaUserPlus className="mr-1" /> Add User
             </Button>
             <div className="border rounded p-2">
               <MdRefresh
-                onClick={() => fetchUsers()}
+                onClick={() => {
+                  fetchUsers({
+                    variables: {
+                      page: pageIndex,
+                      limit: pageSize,
+                      search: searchValue,
+                    },
+                  });
+                }}
                 size={20}
                 className="cursor-pointer text-gray-900"
               />
@@ -603,7 +609,7 @@ const User = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="text-center p-4">
+                  <td colSpan={table.getAllColumns().length} className="text-center p-4">
                     No users found.
                   </td>
                 </tr>
@@ -642,9 +648,7 @@ const User = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         table.setPageIndex(index);
-                      }}
-                      className={undefined}
-                    >
+                      } } className={undefined}                    >
                       {index + 1}
                     </PaginationLink>
                   </PaginationItem>

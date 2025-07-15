@@ -13,7 +13,10 @@ import PublicRoute from "./components/PublicRoutes";
 import Permission from "./pages/roles&permissionManagement/permission/Permission";
 import Roles from "./pages/roles&permissionManagement/roles/Roles";
 
-export default function App() {
+function App() {
+  // const [activePage, setActivePage] = useState("dashboard");
+  // const [isOpen, setIsOpen] = useState(false);
+//comment
   return (
     <Routes>
       {/* Public Auth Route */}
@@ -89,3 +92,5 @@ export default function App() {
     </Routes>
   );
 }
+
+export default App;

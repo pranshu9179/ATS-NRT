@@ -88,7 +88,10 @@ export default function Roles() {
   const [RoleList, setRoleList] = useState(initialData);
   const [openViewPage, setOpenViewPage] = useState(false);
 
-  const [listRoles, { data }] = useLazyQuery(ListRoles);
+  const [listRoles, { data }] = useLazyQuery(ListRoles,{
+    fetchPolicy: 'network-only'
+  });
+
 
   const mainData = data?.rolesList?.data ?? [];
 
@@ -98,7 +101,7 @@ export default function Roles() {
 
   const handleView = (roles) => {
     setselectedRole(roles);
-    setOpenViewPage(true);
+    setOpenViewPage(true)
   };
 
   const columns = [

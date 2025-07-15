@@ -6,7 +6,7 @@ export const LoginApi = gql`
       id
       firstName
       lastName
-      email
+      email 
       password
       role_names
       mobileNo
@@ -52,4 +52,29 @@ export const CreateUser = gql`
       token
     }
   }
+`;
+
+export const AddJob = gql`
+mutation CreateJob($data: CreateJobInput!) {
+  createJob(data: $data) {
+    id
+    title
+    description
+    department
+    location
+    experience
+    salary
+    vacancy
+    status
+    posted_date
+    closing_date
+    created_at
+    created_by {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+}
 `;

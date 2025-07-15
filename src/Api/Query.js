@@ -1,3 +1,4 @@
+// import { AddJob } from "@/pages/jobManagement/AddJob";
 import { gql } from "@apollo/client";
 
 export const ListRoles = gql`
@@ -158,7 +159,53 @@ export const UsersList = gql`
         }
         roleId
         sortBy
-        
+      }
+    }
+  }
+`;
+
+export const UsersListQuery = gql`
+  query UsersList($page: Int, $limit: Int) {
+    usersList(page: $page, limit: $limit) {
+      data {
+        id
+        firstName
+        lastName
+        email
+        password
+        role_names
+        mobileNo
+        userType
+        is_blocked
+        created_at
+        updated_at
+        token
+      }
+      pagination {
+        currentPage
+        limit
+        totalCount
+        totalPages
+        hasNextPage
+        hasPreviousPage
+        nextPage
+        previousPage
+      }
+      filters {
+        userType {
+          id
+          firstName
+          lastName
+          email
+          password
+          role_names
+          mobileNo
+          userType
+          is_blocked
+          created_at
+          updated_at
+          token
+        }
       }
     }
   }

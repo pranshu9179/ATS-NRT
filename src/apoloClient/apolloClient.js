@@ -16,7 +16,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // Optional: Attach token from localStorage to every request
 const authLink = new HttpLink({
-  uri: "http://192.168.1.48:5000/graphql",
+  uri: "http://192.168.1.5:5000/graphql",
   headers: {
     authorization: localStorage.getItem("token")
       ? `Bearer ${localStorage.getItem("token")}`
