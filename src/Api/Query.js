@@ -98,9 +98,9 @@ export const PermissionList = gql`
   }
 `;
 
-export const UsersListQuery = gql`
-  query UsersList($page: Int, $limit: Int) {
-  usersList(page: $page, limit: $limit) {
+export const UsersList = gql`
+query UsersList($page: Int, $limit: Int, $search: String, $isverified: Boolean, $userType: String, $roleId: Int, $sortBy: String) {
+  usersList(page: $page, limit: $limit, search: $search, isverified: $isverified, userType: $userType, roleId: $roleId, sortBy: $sortBy) {
     data {
       id
       firstName
@@ -115,17 +115,9 @@ export const UsersListQuery = gql`
       updated_at
       token
     }
-    pagination {
-      currentPage
-      limit
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-      nextPage
-      previousPage
-    }
     filters {
+      search
+      isverified
       userType {
         id
         firstName
@@ -140,6 +132,19 @@ export const UsersListQuery = gql`
         updated_at
         token
       }
+      roleId
+      sortBy
+      sortOrder
+    }
+    pagination {
+      currentPage
+      limit
+      totalCount
+      totalPages
+      hasNextPage
+      hasPreviousPage
+      nextPage
+      previousPage
     }
   }
 }
@@ -186,4 +191,5 @@ query JobList($page: Int, $limit: Int, $search: String, $department: String, $lo
       previousPage
     }
   }
-}` 
+}
+`;

@@ -19,10 +19,10 @@ export const LoginApi = gql`
   }
 `;
 
-export const AddJob = gql`
+export const CreateJob = gql`
 mutation CreateJob($data: CreateJobInput!) {
   createJob(data: $data) {
-    id
+       id
     title
     description
     department
@@ -37,60 +37,11 @@ mutation CreateJob($data: CreateJobInput!) {
     created_by {
       id
       firstName
-      lastName
-      email
     }
   }
 }
 `;
 
-
-// export const UPDATE_JOB_MUTATION = gql`
-//  mutation UpdateJob(
-//   $id: ID!
-//   $title: String
-//   $description: String
-//   $department: String
-//   $location: String
-//   $experience: String
-//   $salary: Int
-//   $vacancy: Int
-//   $status: Boolean
-//   $closing_date: String
-// ) {
-//   updateJob(
-//     id: $id
-//     title: $title
-//     description: $description
-//     department: $department
-//     location: $location
-//     experience: $experience
-//     salary: $salary
-//     vacancy: $vacancy
-//     status: $status
-//     closing_date: $closing_date
-//   ) {
-//     id
-//     title
-//     description
-//     department
-//     location
-//     experience
-//     salary
-//     vacancy
-//     status
-//     posted_date
-//     closing_date
-//     created_at
-//     created_by {
-//       id
-//       firstName
-//       lastName
-//       email
-//     }
-//   }
-// }
-// `;
 
 export const UPDATE_JOB_MUTATION = gql`
   mutation UpdateJob(
