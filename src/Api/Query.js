@@ -164,49 +164,46 @@ export const UsersList = gql`
   }
 `;
 
-export const UsersListQuery = gql`
-  query UsersList($page: Int, $limit: Int) {
-    usersList(page: $page, limit: $limit) {
-      data {
+export const JobListQuery = gql`
+query JobList($page: Int, $limit: Int, $search: String, $department: String, $location: String, $status: Boolean, $sortBy: String) {
+  jobList(page: $page, limit: $limit, search: $search, department: $department, location: $location, status: $status, sortBy: $sortBy) {
+    data {
+      id
+      title
+      description
+      department
+      location
+      experience
+      salary
+      vacancy
+      status
+      posted_date
+      closing_date
+      created_at
+      created_by {
         id
         firstName
         lastName
         email
-        password
-        role_names
-        mobileNo
-        userType
-        is_blocked
-        created_at
-        updated_at
-        token
-      }
-      pagination {
-        currentPage
-        limit
-        totalCount
-        totalPages
-        hasNextPage
-        hasPreviousPage
-        nextPage
-        previousPage
-      }
-      filters {
-        userType {
-          id
-          firstName
-          lastName
-          email
-          password
-          role_names
-          mobileNo
-          userType
-          is_blocked
-          created_at
-          updated_at
-          token
-        }
       }
     }
+    filters {
+      search
+      department
+      location
+      status
+      sortBy
+    }
+    pagination {
+      currentPage
+      limit
+      totalCount
+      totalPages
+      hasNextPage
+      hasPreviousPage
+      nextPage
+      previousPage
+    }
   }
+}
 `;
