@@ -40,3 +40,19 @@
 .read-the-docs {
   color: #888;
 }
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #6366f1;
+    border-radius: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #e5e7eb;
+  }
+}
+
+
+

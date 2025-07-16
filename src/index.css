@@ -118,3 +118,20 @@
     @apply bg-background text-foreground;
   }
 }
+/* Global CSS (e.g., index.css or tailwind base layer) */
+html, body {
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #6366f1;
+    border-radius: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #e5e7eb;
+  }
+}

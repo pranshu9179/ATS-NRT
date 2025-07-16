@@ -68,8 +68,8 @@ export const PermissionList = gql`
       sortOrder: $sortOrder
     ) {
       data {
-        id
-        name
+        id,
+        name: String
         slug
         permission_group
         description
@@ -96,3 +96,51 @@ export const PermissionList = gql`
     }
   }
 `;
+
+
+
+// joblist
+export const JobList = gql`
+  query JobList($page: Int, $limit: Int, $search: String, $department: String, $location: String, $status: Boolean, $sortBy: String) {
+  jobList(page: $page, limit: $limit, search: $search, department: $department, location: $location, status: $status, sortBy: $sortBy) {
+    data {
+      closing_date
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        email
+      }
+      experience
+      description
+      department
+      id
+      location
+      posted_date
+      salary
+      status
+      title
+      vacancy
+    }
+    filters {
+      department
+      location
+      search
+      sortBy
+      status
+    }
+    pagination {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      nextPage
+      previousPage
+      totalCount
+      totalPages
+    }
+  }
+}
+`;
+
