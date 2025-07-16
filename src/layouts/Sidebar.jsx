@@ -1,146 +1,3 @@
-// import React, { useState } from "react";
-// import {
-//   Sidebar as ShadcnSidebar,
-//   SidebarContent,
-//   SidebarGroup,
-//   SidebarGroupContent,
-//   SidebarGroupLabel,
-//   SidebarMenu,
-//   SidebarMenuButton,
-//   SidebarMenuItem,
-//   SidebarProvider,
-// } from "@/components/ui/sidebar";
-// import { FiUsers } from "react-icons/fi";
-// import { Calendar, Home, Settings } from "lucide-react";
-// import NavBar from "./NavBar";
-// import { Link } from "react-router-dom";
-// import { ROUTES } from "@/utils";
-// import { MdOutlineFeedback } from "react-icons/md";
-// import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
-// import Footer from "./Footer";
-// import { Outlet } from "react-router-dom";
-// import { MdOutlineLockPerson } from "react-icons/md";
-// import { UserCog, Users } from "lucide-react";
-
-// const Sidebar = () => {
-//   const items = [
-//     {
-//       title: "Dashboard",
-//       url: ROUTES?.DASHBOARD,
-//       icon: Home,
-//       isActive: true,
-//     },
-//     {
-//       title: "User Management",
-//       url: ROUTES?.USER_MANAGEMENT,
-//       icon: LuUsersRound,
-//       isActive: true,
-//     },
-//     {
-//       title: "Roles",
-//       url: ROUTES.ROLES,
-//       icon: UserCog,
-//       isActive: true,
-//     },
-//     {
-//       title: "Permission",
-//       url: ROUTES.PERMISSION,
-//       icon: MdOutlineLockPerson,
-//       isActive: true,
-//     },
-//     {
-//       title: "Candidate Management",
-//       url: ROUTES?.CANDIDATE_MANAGEMENT,
-//       icon: LuSquareUserRound,
-//       isActive: true,
-//     },
-//     {
-//       title: "Job Management",
-//       url: ROUTES?.JOB_MANAGEMENT,
-//       icon: MdOutlineFeedback,
-//       isActive: true,
-//     },
-//     {
-//       title: "Calendar",
-//       url: "#",
-//       icon: Calendar,
-//       isActive: true,
-//     },
-//   ];
-
-//   return (
-//     <ShadcnSidebar className="w-64 h-screen border-r shadow bg-white dark:bg-zinc-900 dark:border-white/10 py-4">
-//       <SidebarContent>
-//         <SidebarGroup className="space-y-2 h-full bg-white dark:bg-zinc-900">
-//           <div className="flex flex-col justify-center items-center">
-//             <FiUsers className="text-2xl text-gray-800 dark:text-white" />
-//             <SidebarGroupLabel className="text-lg font-semibold text-gray-950 dark:text-white">
-//               Applicant Tracker
-//             </SidebarGroupLabel>
-//           </div>
-
-//           <SidebarGroupContent>
-//             <SidebarMenu>
-//               {items.map((item) => (
-//                 <SidebarMenuItem key={item.title}>
-//                   <SidebarMenuButton asChild>
-//                     <Link
-//                       to={item.url}
-//                       className={`flex items-center space-x-2 ${
-//                         item?.isActive
-//                           ? "text-blue-600 font-semibold bg-gray-300"
-//                           : " text-gray-800 dark:text-gray-200"
-//                       }`}
-//                     >
-//                       <item.icon className="w-4 h-4" />
-//                       <span>{item.title}</span>
-//                     </Link>
-//                   </SidebarMenuButton>
-//                 </SidebarMenuItem>
-//               ))}
-//             </SidebarMenu>
-//           </SidebarGroupContent>
-//         </SidebarGroup>
-//       </SidebarContent>
-//     </ShadcnSidebar>
-//   );
-// };
-
-// const SidebarWrapper = ({ children }) => {
-//   return (
-//     <SidebarProvider className="w-full h-screen flex bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-white">
-//       {/* Sidebar */}
-//       <div className="bg-white dark:bg-zinc-900">
-//         {/* <SidebarProvider className=" w-full min-h-screen"> */}
-//         {/* <div className="bg-white"> */}
-//         <Sidebar />
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="w-full flex flex-col bg-gray-100 dark:bg-zinc-950">
-//         {/* Top Nav */}
-//         <div className="sticky top-0 shadow bg-white dark:bg-zinc-900 z-50">
-//           <NavBar />
-//         </div>
-
-//         {/* Page Content */}
-//         <div className="bg-white dark:bg-zinc-900 h-screen overflow-y-auto p-8 m-2 rounded shadow">
-//           {/* <div className="bg-white p-8 m-2"> */}
-//           {children}
-//         </div>
-
-//         {/* Footer */}
-//         <div className="bg-white dark:bg-zinc-900">
-//           <Footer />
-//         </div>
-//       </div>
-//     </SidebarProvider>
-//   );
-// };
-
-// export default SidebarWrapper;
-
-
 import React, { useState } from "react";
 import {
   Sidebar as ShadcnSidebar,
@@ -154,14 +11,14 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { FiUsers } from "react-icons/fi";
-import { Calendar, Home, Settings, UserCog, Users } from "lucide-react";
+import { Calendar, Home, Settings, User, UserCog, Users } from "lucide-react";
 import NavBar from "./NavBar";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { MdOutlineFeedback, MdOutlineLockPerson } from "react-icons/md";
-import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
+import { LuSquareUserRound, LuUsersRound } from "react-icons/lu";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -202,6 +59,8 @@ const Sidebar = () => {
       url: "#",
       icon: Calendar,
     },
+    { title: "Feedback", url: ROUTES?.Feedback, icon :User},
+
   ];
 
   return (

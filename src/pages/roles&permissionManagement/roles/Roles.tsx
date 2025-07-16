@@ -1,21 +1,20 @@
-"use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { flexRender } from "@tanstack/react-table";
-import { Search, UserCog } from "lucide-react";
+import { useLazyQuery } from "@apollo/client";
 import { FaEdit, FaPlus } from "react-icons/fa";
 import { MdDelete, MdRefresh, MdOutlineLockPerson } from "react-icons/md";
-import SidebarWrapper from "@/layouts/Sidebar";
+import { LuEye, LuUser } from "react-icons/lu";
+import { Search, UserCog } from "lucide-react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   Pagination,
   PaginationContent,
@@ -25,134 +24,68 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+import SidebarWrapper from "@/layouts/Sidebar";
 import CreateRoles from "./CreateRoles";
 import ViewRoles from "./ViewRoles";
-import { LuEye, LuUser } from "react-icons/lu";
-import { useLazyQuery } from "@apollo/client";
 import { ListRoles } from "@/Api/Query";
 import { formatDate } from "@/components/FormatDate";
 
-const initialData = [
-  {
-    id: 1,
-    name: "Ram verma",
-    userType: "HR",
-    createdAt: "2024-06-01T10:15:00Z",
-  },
-  {
-    id: 2,
-    name: "Rahul yadav",
-    userType: "Interviewer",
-    createdAt: "2024-06-02T14:20:00Z",
-  },
-  {
-    id: 3,
-    name: "Tanvi Verma ",
-    userType: "Admin",
-    createdAt: "2024-06-03T08:10:00Z",
-  },
-  {
-    id: 4,
-    name: "Anjali Sharma",
-    userType: "Admin",
-    createdAt: "2024-06-04T09:00:00Z",
-  },
-  {
-    id: 5,
-    name: "Suresh verma",
-    userType: "Interviewer",
-    createdAt: "2024-06-05T17:45:00Z",
-  },
-  {
-    id: 6,
-    name: "Priya sharma",
-    userType: "Interviewer",
-    createdAt: "2024-06-06T12:30:00Z",
-  },
-  {
-    id: 7,
-    name: "Karan  verma",
-    userType: "Interviewer",
-    createdAt: "2024-06-07T16:00:00Z",
-  },
-];
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  flexRender,
+} from "@tanstack/react-table";
 
 export default function Roles() {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
-  const [selectedRole, setselectedRole] = useState(null);
-  const [RoleList, setRoleList] = useState(initialData);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [openViewPage, setOpenViewPage] = useState(false);
 
-  const [listRoles, { data }] = useLazyQuery(ListRoles,{
-    fetchPolicy: 'network-only'
+  const [listRoles, { data }] = useLazyQuery(ListRoles, {
+    fetchPolicy: "network-only",
   });
-
-
-  const mainData = data?.rolesList?.data ?? [];
 
   useEffect(() => {
     listRoles();
   }, []);
 
-  const handleView = (roles) => {
-    setselectedRole(roles);
-    setOpenViewPage(true)
-  };
+  const mainData = data?.rolesList?.data ?? [];
 
   const columns = [
     {
       id: "select",
       header: ({ table }) => (
         <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className={undefined}
-        />
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)} className={undefined}        />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className={undefined}
-        />
+          onCheckedChange={(value) => row.toggleSelected(!!value)} className={undefined}        />
       ),
-      enableSorting: false,
-      enableHiding: false,
     },
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px]">{row?.original.name}</div>
-      ),
+      cell: ({ row }) => <div className="capitalize text-sm">{row.original.name}</div>,
     },
     {
       accessorKey: "userType",
-      header: "UserType",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px] cursor-pointer">
-          {row.original?.userType}
-        </div>
-      ),
+      header: "User Type",
+      cell: ({ row }) => <div className="capitalize text-sm">{row.original.userType}</div>,
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "created_at",
       header: "Created At",
-      cell: ({ row }) => (
-        <div className="capitalize text-[14px] cursor-pointer">
-          {formatDate(row.original?.created_at)}
-        </div>
-      ),
+      cell: ({ row }) => <div className="text-sm">{formatDate(row.original.created_at)}</div>,
     },
     {
       id: "actions",
@@ -161,285 +94,625 @@ export default function Roles() {
         const role = row.original;
         return (
           <div className="flex justify-center items-center gap-2">
-            <button type="button">
-              <FaEdit
-                onClick={() => {
-                  setselectedRole(role);
-                  setOpen(true);
-                }}
-                size={18}
-                className="text-blue-600 hover:text-blue-800 cursor-pointer"
-              />
-            </button>
-            <button
-              type="button"
+            <FaEdit
               onClick={() => {
-                setselectedRole(role);
+                setSelectedRole(role);
+                setOpen(true);
+              }}
+              className="text-blue-600 hover:text-blue-800 cursor-pointer"
+              size={18}
+            />
+            <LuEye
+              onClick={() => {
+                setSelectedRole(role);
                 setOpenViewPage(true);
               }}
-            >
-              <LuEye
-                size={18}
-                className="text-blue-600 hover:text-blue-800 cursor-pointer"
-              />
-            </button>
-            <button type="button">
-              <MdDelete
-                onClick={() => {
-                  setselectedRole(role);
-                  setOpenDeleteModel(true);
-                }}
-                size={20}
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-              />
-            </button>
+              className="text-green-600 hover:text-green-800 cursor-pointer"
+              size={18}
+            />
+            <MdDelete
+              onClick={() => {
+                setSelectedRole(role);
+                setOpenDeleteModel(true);
+              }}
+              className="text-red-500 hover:text-red-700 cursor-pointer"
+              size={20}
+            />
           </div>
         );
       },
     },
   ];
 
-  const handleDelete = (userId) => {
-    const updatedRoles = RoleList.filter(
-      (role) => role.name !== selectedRole.name
-    );
-    setRoleList(updatedRoles);
-    setOpenDeleteModel(false);
-  };
+  const table = useReactTable({
+    data: mainData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+    },
+    initialState: {
+      pagination: { pageSize: 5 },
+    },
+  });
 
   const handleRefresh = () => {
-    setRoleList([...initialData]);
+    listRoles();
     setRowSelection({});
     setSorting([]);
     setColumnFilters([]);
   };
 
-  const table = useReactTable({
-    data: mainData,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 5,
-      },
-    },
-  });
-
   return (
     <SidebarWrapper>
       {/* Create Role Dialog */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-full max-w-5xl rounded-xl px-4 sm:px-6 py-4 shadow-2xl space-y-3">
-          <div className="flex items-center gap-4 sticky top-0 z-10 pb-2">
-            <UserCog className="text-[12px]" />
-            <h2 className="text-lg font-medium">Create Role</h2>
-          </div>
-          <div className="overflow-y-auto max-h-[70vh] pr-2">
-            <CreateRoles setOpen={setOpen} />
-          </div>
-        </DialogContent>
+    <Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent
+    className="!w-[90vw] !max-w-none !p-6 !rounded-lg"
+    style={{ width: "90vw", maxWidth: "none" }} // ✅ force inline style too
+  >
+    <DialogHeader className={undefined}>
+      <DialogTitle className={undefined}>Create Role</DialogTitle>
+      <DialogDescription className={undefined}>Define role permissions below</DialogDescription>
+    </DialogHeader>
 
-        {/* View Role Dialog */}
-      </Dialog>
+    {/* Ensure this div isn't restricting width */}
+    <div className="w-full h-full overflow-y-auto max-h-[70vh]">
+      <CreateRoles setOpen={setOpen} selectedRole={selectedRole} />
+    </div>
+  </DialogContent>
+</Dialog>
+
+
+
+      {/* View Role Dialog */}
       <Dialog open={openViewPage} onOpenChange={setOpenViewPage}>
-        <DialogContent className="w-full max-w-5xl rounded-xl px-4 sm:px-6 py-4 shadow-2xl space-y-3">
-          <div className="flex gap-2 items-center">
-            <LuUser className="text-xl" />
-            <h3 className="text-lg font-medium">User Detail</h3>
-          </div>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader className={undefined}>
+            <DialogTitle className="flex items-center gap-2">
+              <LuUser className="w-5 h-5" />
+              View Role
+            </DialogTitle>
+            <DialogDescription className={undefined}>Details of the selected role.</DialogDescription>
+          </DialogHeader>
           <ViewRoles roles={selectedRole} setOpenViewPage={setOpenViewPage} />
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Delete Confirmation */}
       <Dialog open={openDeleteModel} onOpenChange={setOpenDeleteModel}>
-        <DialogContent className="w-full max-w-5xl rounded-xl p-10 shadow-2xl space-y-3">
-          <div className="flex flex-col gap-4 items-center">
-            <MdOutlineLockPerson className="text-xl" />
-            <h3 className="text-lg font-medium">
-              Are you sure you want to delete this Role?
-            </h3>
-            <div className="space-x-2">
-              <button
-                onClick={() => handleDelete(selectedRole?.id)}
-                className="bg-green-500 text-white px-4 py-[8px] rounded-lg shadow-md hover:bg-green-800 transition duration-300 text-sm font-medium"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => setOpenDeleteModel(false)}
-                className="bg-red-500 text-white px-4 py-[8px] rounded-lg shadow-md hover:bg-red-800 transition duration-300 text-sm font-medium"
-              >
-                Cancel
-              </button>
-            </div>
+        <DialogContent className="max-w-md">
+          <DialogHeader className={undefined}>
+            <DialogTitle className="flex items-center gap-2 justify-center">
+              <MdOutlineLockPerson className="w-5 h-5" />
+              Confirm Deletion
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Are you sure you want to delete this role?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => setOpenDeleteModel(false)}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => setOpenDeleteModel(false)}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+            >
+              Cancel
+            </button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <div className="w-full">
-        <h2 className="text-lg font-semibold">Roles</h2>
-        <div className="flex justify-between items-center py-4">
-          <div className="relative">
-            <Input
-              placeholder="Search...."
-              value={table.getColumn("name")?.getFilterValue() ?? ""}
-              onChange={(e) =>
-                table.getColumn("name")?.setFilterValue(e.target.value)
-              }
-              className="pl-8 w-96"
-              type={undefined}
+      {/* Page Header */}
+      <div className="flex justify-between items-center py-4">
+        <h2 className="text-xl font-semibold">Roles</h2>
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              setSelectedRole(null);
+              setOpen(true);
+            }}
+            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 flex items-center gap-2"
+          >
+            <FaPlus /> Add Role
+          </button>
+          <div className="p-2 border rounded bg-gray-100">
+            <MdRefresh
+              onClick={handleRefresh}
+              className="cursor-pointer text-gray-700 hover:text-orange-700"
             />
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-          </div>
-
-          <div className="flex gap-3 items-center">
-            <button
-              onClick={() => setOpen(true)}
-              className="bg-black text-white px-4 py-[12px] rounded-lg shadow-md hover:bg-gray-800 transition duration-300 text-sm flex gap-1 items-center"
-              title="Add Role"
-            >
-              <FaPlus /> Add Role
-            </button>
-            <div className="border border-black/10 rounded-xl p-2 bg-gray-100 hover:text-gray-500">
-              <MdRefresh
-                onClick={handleRefresh}
-                size={20}
-                className="cursor-pointer text-gray-900 hover:text-orange-700"
-              />
-            </div>
           </div>
         </div>
+      </div>
 
-        {/* Updated Table Wrapper */}
-        <div className="w-full overflow-x-auto rounded-md border max-w-full">
-          <table className="min-w-full border text-sm">
-            <thead className="bg-muted">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="p-2 text-left cursor-pointer select-none"
-                      onClick={header.column.getToggleSortingHandler?.()}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {(header.column.getIsSorted() &&
-                        {
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string]) ||
-                        ""}
-                    </th>
+      {/* Search Bar */}
+      <div className="relative mb-4">
+        <Input
+          placeholder="Search by name..."
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
+          onChange={(e) => table.getColumn("name")?.setFilterValue(e.target.value)}
+          className="pl-8 w-96" type={undefined}        />
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto border rounded-md">
+        <table className="min-w-full text-sm border">
+          <thead className="bg-muted">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="p-2 text-left cursor-pointer"
+                    onClick={header.column.getToggleSortingHandler?.()}
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.column.getIsSorted()
+                      ? header.column.getIsSorted() === "asc"
+                        ? " 🔼"
+                        : " 🔽"
+                      : ""}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={`border-b hover:bg-accent ${
+                    row.getIsSelected() ? "bg-accent/30" : ""
+                  }`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="p-2">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
                   ))}
                 </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={`border-b hover:bg-accent ${
-                      row.getIsSelected() ? "bg-accent/30" : ""
-                    }`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="p-2">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={table.getAllColumns().length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="text-center p-4">
+                  No roles found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-4">
-          <div className="text-muted-foreground text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="w-full sm:w-auto flex justify-end">
-            <Pagination className={undefined}>
-              <PaginationContent className="flex-wrap sm:justify-end">
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      table.previousPage();
-                    }}
-                    className={
-                      table.getCanPreviousPage()
-                        ? ""
-                        : "pointer-events-none opacity-50"
-                    }
-                  />
-                </PaginationItem>
-                {Array.from({ length: table.getPageCount() }, (_, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      href="#"
-                      isActive={table.getState().pagination.pageIndex === index}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        table.setPageIndex(index);
-                      }}
-                      className={undefined}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      table.nextPage();
-                    }}
-                    className={
-                      table.getCanNextPage()
-                        ? ""
-                        : "pointer-events-none opacity-50"
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
+      {/* Pagination */}
+      <div className="flex flex-col sm:flex-row justify-between items-center py-4">
+        <span className="text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} selected
+        </span>
+        <Pagination className={undefined}>
+          <PaginationContent className="flex-wrap justify-end">
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  table.previousPage();
+                }}
+                className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+            {Array.from({ length: table.getPageCount() }, (_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  href="#"
+                  isActive={table.getState().pagination.pageIndex === index}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    table.setPageIndex(index);
+                  } } className={undefined}                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  table.nextPage();
+                }}
+                className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </SidebarWrapper>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // ✅ Full Updated Roles Component with Font Size & Justified Filters
+
+// import React, { useEffect, useState } from "react";
+// import { useLazyQuery } from "@apollo/client";
+// import { FaEdit, FaPlus } from "react-icons/fa";
+// import { MdDelete, MdRefresh, MdOutlineLockPerson } from "react-icons/md";
+// import { LuEye, LuUser } from "react-icons/lu";
+// import { Search, UserCog } from "lucide-react";
+
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogDescription,
+// } from "@/components/ui/dialog";
+// import { Checkbox } from "@/components/ui/checkbox";
+// import { Input } from "@/components/ui/input";
+// import {
+//   Pagination,
+//   PaginationContent,
+//   PaginationItem,
+//   PaginationLink,
+//   PaginationNext,
+//   PaginationPrevious,
+// } from "@/components/ui/pagination";
+
+// import SidebarWrapper from "@/layouts/Sidebar";
+// import CreateRoles from "./CreateRoles";
+// import ViewRoles from "./ViewRoles";
+// import { ListRoles } from "@/Api/Query";
+// import { formatDate } from "@/components/FormatDate";
+
+// import {
+//   getCoreRowModel,
+//   getFilteredRowModel,
+//   getPaginationRowModel,
+//   getSortedRowModel,
+//   useReactTable,
+//   flexRender,
+// } from "@tanstack/react-table";
+
+// export default function Roles() {
+//   const [sorting, setSorting] = useState([]);
+//   const [columnFilters, setColumnFilters] = useState([]);
+//   const [rowSelection, setRowSelection] = useState({});
+//   const [open, setOpen] = useState(false);
+//   const [openDeleteModel, setOpenDeleteModel] = useState(false);
+//   const [selectedRole, setSelectedRole] = useState(null);
+//   const [openViewPage, setOpenViewPage] = useState(false);
+
+//   const [listRoles, { data }] = useLazyQuery(ListRoles, {
+//     fetchPolicy: "network-only",
+//   });
+
+//   useEffect(() => {
+//     listRoles();
+//   }, []);
+
+//   const mainData = data?.rolesList?.data ?? [];
+
+//   const columns = [
+//     {
+//       id: "select",
+//       header: ({ table }) => (
+//         <Checkbox
+//           checked={table.getIsAllPageRowsSelected()}
+//           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)} className={undefined}        />
+//       ),
+//       cell: ({ row }) => (
+//         <Checkbox
+//           checked={row.getIsSelected()}
+//           onCheckedChange={(value) => row.toggleSelected(!!value)} className={undefined}        />
+//       ),
+//     },
+//     {
+//       accessorKey: "name",
+//       header: "Name",
+//       cell: ({ row }) => <div className="capitalize text-sm">{row.original.name}</div>,
+//     },
+//     {
+//       accessorKey: "userType",
+//       header: "User Type",
+//       cell: ({ row }) => <div className="capitalize text-sm">{row.original.userType}</div>,
+//     },
+//     {
+//       accessorKey: "created_at",
+//       header: "Created At",
+//       cell: ({ row }) => <div className="text-sm">{formatDate(row.original.created_at)}</div>,
+//     },
+//     {
+//       id: "actions",
+//       header: () => <div className="text-center font-medium">Actions</div>,
+//       cell: ({ row }) => {
+//         const role = row.original;
+//         return (
+//           <div className="flex justify-center items-center gap-2">
+//             <FaEdit
+//               onClick={() => {
+//                 setSelectedRole(role);
+//                 setOpen(true);
+//               }}
+//               className="text-blue-600 hover:text-blue-800 cursor-pointer"
+//               size={18}
+//             />
+//             <LuEye
+//               onClick={() => {
+//                 setSelectedRole(role);
+//                 setOpenViewPage(true);
+//               }}
+//               className="text-green-600 hover:text-green-800 cursor-pointer"
+//               size={18}
+//             />
+//             <MdDelete
+//               onClick={() => {
+//                 setSelectedRole(role);
+//                 setOpenDeleteModel(true);
+//               }}
+//               className="text-red-500 hover:text-red-700 cursor-pointer"
+//               size={20}
+//             />
+//           </div>
+//         );
+//       },
+//     },
+//   ];
+
+//   const table = useReactTable({
+//     data: mainData,
+//     columns,
+//     getCoreRowModel: getCoreRowModel(),
+//     getPaginationRowModel: getPaginationRowModel(),
+//     getSortedRowModel: getSortedRowModel(),
+//     getFilteredRowModel: getFilteredRowModel(),
+//     onSortingChange: setSorting,
+//     onColumnFiltersChange: setColumnFilters,
+//     onRowSelectionChange: setRowSelection,
+//     state: {
+//       sorting,
+//       columnFilters,
+//       rowSelection,
+//     },
+//     initialState: {
+//       pagination: { pageSize: 5 },
+//     },
+//   });
+
+//   const handleRefresh = () => {
+//     listRoles();
+//     setRowSelection({});
+//     setSorting([]);
+//     setColumnFilters([]);
+//   };
+
+//   return (
+//     <SidebarWrapper>
+//       {/* Create Role Dialog */}
+//       <Dialog open={open} onOpenChange={setOpen}>
+//         <DialogContent
+//           className="!w-[90vw] !max-w-none !p-6 !rounded-lg text-xl"
+//           style={{ width: "90vw", maxWidth: "none" }}
+//         >
+//           <DialogHeader className={undefined}>
+//             <DialogTitle className={undefined}>Create Role</DialogTitle>
+//             <DialogDescription className={undefined}>Define role permissions below</DialogDescription>
+//           </DialogHeader>
+//           <div className="w-full h-full overflow-y-auto max-h-[70vh]">
+//             <CreateRoles setOpen={setOpen} selectedRole={selectedRole} />
+//           </div>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* View Role Dialog */}
+//       <Dialog open={openViewPage} onOpenChange={setOpenViewPage}>
+//         <DialogContent className="max-w-4xl">
+//           <DialogHeader className={undefined}>
+//             <DialogTitle className="flex items-center gap-2">
+//               <LuUser className="w-5 h-5" /> View Role
+//             </DialogTitle>
+//             <DialogDescription className={undefined}>Details of the selected role.</DialogDescription>
+//           </DialogHeader>
+//           <ViewRoles roles={selectedRole} setOpenViewPage={setOpenViewPage} />
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* Delete Confirmation */}
+//       <Dialog open={openDeleteModel} onOpenChange={setOpenDeleteModel}>
+//         <DialogContent className="max-w-md">
+//           <DialogHeader className={undefined}>
+//             <DialogTitle className="flex items-center gap-2 justify-center">
+//               <MdOutlineLockPerson className="w-5 h-5" /> Confirm Deletion
+//             </DialogTitle>
+//             <DialogDescription className="text-center">
+//               Are you sure you want to delete this role?
+//             </DialogDescription>
+//           </DialogHeader>
+//           <div className="flex justify-center gap-4 mt-4">
+//             <button
+//               onClick={() => setOpenDeleteModel(false)}
+//               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800"
+//             >
+//               Confirm
+//             </button>
+//             <button
+//               onClick={() => setOpenDeleteModel(false)}
+//               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+//             >
+//               Cancel
+//             </button>
+//           </div>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* Header */}
+//       <div className="flex justify-between items-center py-4">
+//         <h2 className="text-xl font-semibold">Roles</h2>
+//         <div className="flex gap-3">
+//           <button
+//             onClick={() => {
+//               setSelectedRole(null);
+//               setOpen(true);
+//             }}
+//             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 flex items-center gap-2"
+//           >
+//             <FaPlus /> Add Role
+//           </button>
+//           <div className="p-2 border rounded bg-gray-100">
+//             <MdRefresh
+//               onClick={handleRefresh}
+//               className="cursor-pointer text-gray-700 hover:text-orange-700"
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Search + Filter */}
+//       <div className="flex justify-between items-center gap-4 mb-4 flex-wrap">
+//         <div className="relative w-full sm:w-1/2 max-w-md">
+//           <Input
+//             placeholder="Search by name..."
+//             value={table.getColumn("name")?.getFilterValue() ?? ""}
+//             onChange={(e) => table.getColumn("name")?.setFilterValue(e.target.value)}
+//             className="pl-8" type={undefined}          />
+//           <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+//         </div>
+
+//         <div className="w-full sm:w-1/3 max-w-xs">
+//           <select
+//             className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+//             onChange={(e) => {
+//               table.getColumn("userType")?.setFilterValue(e.target.value || undefined);
+//             }}
+//           >
+//             <option value="">All User Types</option>
+//             <option value="HR">HR</option>
+//             <option value="Admin">Admin</option>
+//             <option value="Interviewer">Interviewer</option>
+//           </select>
+//         </div>
+//       </div>
+
+//       {/* Table */}
+//       <div className="overflow-x-auto border rounded-md">
+//         <table className="min-w-full text-sm border">
+//           <thead className="bg-muted">
+//             {table.getHeaderGroups().map((headerGroup) => (
+//               <tr key={headerGroup.id}>
+//                 {headerGroup.headers.map((header) => (
+//                   <th
+//                     key={header.id}
+//                     className="p-2 text-left cursor-pointer"
+//                     onClick={header.column.getToggleSortingHandler?.()}
+//                   >
+//                     {flexRender(header.column.columnDef.header, header.getContext())}
+//                     {header.column.getIsSorted()
+//                       ? header.column.getIsSorted() === "asc"
+//                         ? " 🔼"
+//                         : " 🔽"
+//                       : ""}
+//                   </th>
+//                 ))}
+//               </tr>
+//             ))}
+//           </thead>
+//           <tbody>
+//             {table.getRowModel().rows.length > 0 ? (
+//               table.getRowModel().rows.map((row) => (
+//                 <tr
+//                   key={row.id}
+//                   className={`border-b hover:bg-accent ${
+//                     row.getIsSelected() ? "bg-accent/30" : ""
+//                   }`}
+//                 >
+//                   {row.getVisibleCells().map((cell) => (
+//                     <td key={cell.id} className="p-2">
+//                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
+//                     </td>
+//                   ))}
+//                 </tr>
+//               ))
+//             ) : (
+//               <tr>
+//                 <td colSpan={columns.length} className="text-center p-4">
+//                   No roles found.
+//                 </td>
+//               </tr>
+//             )}
+//           </tbody>
+//         </table>
+//       </div>
+
+//       {/* Pagination */}
+//       <div className="flex flex-col sm:flex-row justify-between items-center py-4">
+//         <span className="text-sm text-muted-foreground">
+//           {table.getFilteredSelectedRowModel().rows.length} of {" "}
+//           {table.getFilteredRowModel().rows.length} selected
+//         </span>
+//         <Pagination className={undefined}>
+//           <PaginationContent className="flex-wrap justify-end">
+//             <PaginationItem>
+//               <PaginationPrevious
+//                 href="#"
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   table.previousPage();
+//                 }}
+//                 className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : ""}
+//               />
+//             </PaginationItem>
+//             {Array.from({ length: table.getPageCount() }, (_, index) => (
+//               <PaginationItem key={index}>
+//                 <PaginationLink
+//                   href="#"
+//                   isActive={table.getState().pagination.pageIndex === index}
+//                   onClick={(e) => {
+//                     e.preventDefault();
+//                     table.setPageIndex(index);
+//                   } } className={undefined}                >
+//                   {index + 1}
+//                 </PaginationLink>
+//               </PaginationItem>
+//             ))}
+//             <PaginationItem>
+//               <PaginationNext
+//                 href="#"
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   table.nextPage();
+//                 }}
+//                 className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : ""}
+//               />
+//             </PaginationItem>
+//           </PaginationContent>
+//         </Pagination>
+//       </div>
+//     </SidebarWrapper>
+//   );
+// }

@@ -69,8 +69,8 @@ export const PermissionList = gql`
       sortOrder: $sortOrder
     ) {
       data {
-        id
-        name
+        id,
+        name: String
         slug
         permission_group
         description
