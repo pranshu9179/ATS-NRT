@@ -102,7 +102,7 @@
 //         </div>
 
 //         <div className="bg-white ">
-        
+
 //            <Footer />
 //       </div>
 //       </div>
@@ -110,7 +110,7 @@
 
 
 
-      
+
 //     </SidebarProvider>
 //   );
 // };
@@ -159,9 +159,9 @@ const Sidebar = () => {
       url: ROUTES?.USER_MANAGEMENT,
       icon: LuUsersRound,
     },
-// { title: "Permissions", url:ROUTES?.ROLES_PERMISSIONS, icon: LuUsersRound  },
-{ title: "Roles", url: ROUTES.ROLES, icon: UserCog },
-{ title: "Permission", url: ROUTES.PERMISSION, icon: MdOutlineLockPerson },
+    // { title: "Permissions", url:ROUTES?.ROLES_PERMISSIONS, icon: LuUsersRound  },
+    { title: "Roles", url: ROUTES.ROLES, icon: UserCog },
+    { title: "Permission", url: ROUTES.PERMISSION, icon: MdOutlineLockPerson },
     {
       title: "Candidate Management",
       url: ROUTES?.CANDIDATE_MANAGEMENT,
@@ -172,16 +172,22 @@ const Sidebar = () => {
       url: ROUTES?.JOB_MANAGEMENT,
       icon: MdOutlineFeedback,
     },
+    {
+      title: "My Profile",
+      url: ROUTES?.CANDIDATE_PROFILE,
+      icon: Settings, // koi bhi icon jo chaaho wo laga sakte ho
+    },
+
     { title: "Calendar", url: "#", icon: Calendar },
 
 
-// const Sidebar = () => {
-//   const items = [
-//     { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
-//     { title: "User Management", url: ROUTES?.USER, icon: User },
+    // const Sidebar = () => {
+    //   const items = [
+    //     { title: "Dashbord", url: ROUTES?.DASHBOARD, icon: Home },
+    //     { title: "User Management", url: ROUTES?.USER, icon: User },
 
-//     { title: "Search", url: "#", icon: Search },
-//     { title: "Settings", url: "#", icon: Settings },
+    //     { title: "Search", url: "#", icon: Search },
+    //     { title: "Settings", url: "#", icon: Settings },
   ];
 
   return (
@@ -223,8 +229,8 @@ const SidebarWrapper = ({ children }) => {
     <SidebarProvider className="w-full h-screen flex bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-white">
       {/* Sidebar */}
       <div className="bg-white dark:bg-zinc-900">
-    {/* <SidebarProvider className=" w-full min-h-screen"> */}
-      {/* <div className="bg-white"> */}
+        {/* <SidebarProvider className=" w-full min-h-screen"> */}
+        {/* <div className="bg-white"> */}
         <Sidebar />
       </div>
 
@@ -237,7 +243,7 @@ const SidebarWrapper = ({ children }) => {
 
         {/* Page Content */}
         <div className="bg-white dark:bg-zinc-900 h-screen overflow-y-auto p-8 m-2 rounded shadow">
-        {/* <div className="bg-white p-8 m-2"> */}
+          {/* <div className="bg-white p-8 m-2"> */}
           {children}
         </div>
 

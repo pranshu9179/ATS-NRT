@@ -5,13 +5,15 @@ import { ROUTES } from "./utils";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import SidebarWrapper from "./layouts/Sidebar";
 import Candidate from "./pages/candidatesManagement/CandidateList";
-import User from "./pages/userManagement/User";
+// import User from "./pages/userManagement/User";
 import JobList from "./pages/jobManagement/JobList";
 import NotFound from "./pages/notFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoutes";
 import Permission from "./pages/roles&permissionManagement/permission/Permission";
 import Roles from "./pages/roles&permissionManagement/roles/Roles";
+import CandidateProfile from "./pages/candidateProfile/CandidateProfile";
+import AdminProfile from "./pages/adminprofile/AdminProfile";
 
 function App() {
   // const [activePage, setActivePage] = useState("dashboard");
@@ -46,14 +48,33 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route
+
+       <Route
+        path={ROUTES?.CANDIDATE_PROFILE}
+        element={
+          <ProtectedRoute>
+            <CandidateProfile />
+          </ProtectedRoute>
+        }
+      /> 
+
+         <Route
+        path={ROUTES?.ADMIN_PROFILE}
+        element={
+          <ProtectedRoute>
+            <AdminProfile />
+          </ProtectedRoute>
+        }
+      /> 
+
+      {/* <Route
         path={ROUTES?.USER_MANAGEMENT}
         element={
           <ProtectedRoute>
             <User />
           </ProtectedRoute>
         }
-      />
+      /> */}
       <Route
         path={ROUTES?.JOB_MANAGEMENT}
         element={

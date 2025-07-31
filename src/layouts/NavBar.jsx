@@ -202,7 +202,9 @@ const Header = () => {
 
           <div className="absolute -right-6 w-28 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 z-50">
             <ul className="py-1 text-gray-700 dark:text-gray-100">
-              <li className="px-2 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer flex items-center gap-1">
+              <li 
+               onClick={() => navigate(ROUTES.ADMIN_PROFILE)}
+               className="px-2 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer flex items-center gap-1">
                 <LuUserRound className="text-base" />
                 <span className="text-sm">My Profile</span>
               </li>

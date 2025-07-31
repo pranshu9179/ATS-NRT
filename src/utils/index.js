@@ -1,3 +1,5 @@
+import CandidateProfile from "@/pages/candidateProfile/CandidateProfile";
+
 export const ROUTES = {
   AUTH: "",
   HOMEPAGE: "/homepage",
@@ -8,6 +10,8 @@ export const ROUTES = {
   ROLES: "/roles",
   FEEDBACK: "/feedback",
   CANDIDATE_MANAGEMENT: "/candidate",
+  ADMIN_PROFILE: "/adminprofile",
+  CANDIDATE_PROFILE: "/candidateprofile",
   USER_MANAGEMENT: "/user",
   JOB_MANAGEMENT: "/job-list",
   NOT_FOUND: "not-found",
